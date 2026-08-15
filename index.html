@@ -5,62 +5,152 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>치킨 타이쿤</title>
     <style>
-        body { font-family: sans-serif; text-align: center; background: #f8f9fa; padding: 30px 10px; }
-        .card { background: white; max-width: 400px; margin: 0 auto; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .money { font-size: 32px; font-weight: bold; color: #d9480e; margin: 15px 0; }
-        .cps { font-size: 16px; color: #868e96; margin-bottom: 20px; }
-        .btn { font-size: 18px; padding: 15px 30px; background: #ff922b; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px; }
+        body { font-family: sans-serif; text-align: center; background: #f8f9fa; padding: 20px 10px; }
+        .card { background: white; max-width: 420px; margin: 0 auto; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .money-box { background: #fff4e6; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        .money { font-size: 30px; font-weight: bold; color: #d9480e; }
+        .cps { font-size: 15px; color: #f59f00; margin-top: 5px; }
+        .btn { font-size: 17px; padding: 14px; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px; }
+        .btn-click { background: #ff922b; font-size: 20px; padding: 18px; }
+        .btn-click:active { transform: scale(0.98); }
         .btn-upgrade { background: #20c997; }
+        .btn-menu { background: #4c6ef5; }
+        .btn-reset { background: #adb5bd; font-size: 12px; padding: 6px; margin-top: 15px; }
         .btn:disabled { background: #ced4da; cursor: not-allowed; }
+        .section-title { font-size: 14px; color: #868e96; text-align: left; margin: 15px 0 5px 2px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <h1>🍗 치킨 타이쿤</h1>
-    <div class="money">돈: <span id="money-text">0</span>원</div>
-    <div class="cps">초당 수익: <span id="cps-text">0</span>원</div>
+    
+    <div class="money-box">
+        <div class="money">돈: <span id="money-text">0</span>원</div>
+        <div class="cps">초당 자동 수익: <span id="cps-text">0</span>원 / sec</div>
+    </div>
 
-    <button class="btn" onclick="makeChicken()">🍗 치킨 튀기기 (+100원)</button>
+    <!-- 수동 튀기기 -->
+    <button id="click-btn" class="btn btn-click" onclick="makeChicken()">🍗 후라이드 튀기기 (+100원)</button>
+
+    <div class="section-title">매장 업그레이드</div>
+    <!-- 알바생 고용 -->
     <button id="hire-btn" class="btn btn-upgrade" onclick="hirePartTime()">👨‍🍳 알바생 고용 (비용: 1,000원)</button>
+    <!-- 메뉴 개발 -->
+    <button id="menu-btn" class="btn btn-menu" onclick="upgradeMenu()">📜 신메뉴 개발 (비용: 2,000원)</button>
+
+    <!-- 데이터 초기화 -->
+    <button class="btn btn-reset" onclick="resetGame()">데이터 초기화</button>
 </div>
 
 <script>
+    // 1. 게임 상태 변수
     let money = 0;
-    let cps = 0; // 초당 수익 (Cost Per Second)
+    let clickPower = 100; // 클릭당 번는 돈
+    let cps = 0; // 초당 자동 수익
+    
     let partTimeCost = 1000;
+    let menuCost = 2000;
+    let menuLevel = 1;
 
-    // 수동 튀기기
-    function makeChicken() {
-        money += 100;
+    const menuNames = ["후라이드", "양념치킨", "반반치킨", "간장치킨", "뿌링클치킨", "황금올리브"];
+
+    // 2. 저장된 데이터 불러오기
+    function loadGame() {
+        const savedData = localStorage.getItem("chickenTycoonSave");
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            money = data.money || 0;
+            clickPower = data.clickPower || 100;
+            cps = data.cps || 0;
+            partTimeCost = data.partTimeCost || 1000;
+            menuCost = data.menuCost || 2000;
+            menuLevel = data.menuLevel || 1;
+        }
         updateUI();
     }
 
-    // 알바생 고용 (초당 자동 수익)
+    // 3. 현재 상태 저장하기
+    function saveGame() {
+        const data = { money, clickPower, cps, partTimeCost, menuCost, menuLevel };
+        localStorage.setItem("chickenTycoonSave", JSON.stringify(data));
+    }
+
+    // 4. 수동 튀기기
+    function makeChicken() {
+        money += clickPower;
+        updateUI();
+        saveGame();
+    }
+
+    // 5. 알바생 고용 (초당 수익 증가)
     function hirePartTime() {
         if (money >= partTimeCost) {
             money -= partTimeCost;
-            cps += 200; // 초당 200원씩 증가
-            partTimeCost = Math.floor(partTimeCost * 1.5); // 다음 고용 비용 증가
+            cps += 200;
+            partTimeCost = Math.floor(partTimeCost * 1.5);
             updateUI();
+            saveGame();
         }
     }
 
-    // 1초마다 자동으로 돈 추가 (방치형 핵심)
+    // 6. 신메뉴 개발 (클릭 수익 증가)
+    function upgradeMenu() {
+        if (money >= menuCost && menuLevel < menuNames.length) {
+            money -= menuCost;
+            menuLevel++;
+            clickPower = menuLevel * 100; // 레벨당 100원씩 증가
+            menuCost = Math.floor(menuCost * 2.5);
+            updateUI();
+            saveGame();
+        }
+    }
+
+    // 7. 1초마다 자동 수익 방치 로직
     setInterval(() => {
-        money += cps;
-        updateUI();
+        if (cps > 0) {
+            money += cps;
+            updateUI();
+            saveGame();
+        }
     }, 1000);
 
-    // 화면 갱신
+    // 8. 화면 UI 업데이트
     function updateUI() {
         document.getElementById("money-text").innerText = money.toLocaleString();
         document.getElementById("cps-text").innerText = cps.toLocaleString();
-        
+
+        // 튀기기 버튼 텍스트
+        const currentMenuName = menuNames[menuLevel - 1] || "전설의 치킨";
+        document.getElementById("click-btn").innerText = `🍗 ${currentMenuName} 튀기기 (+${clickPower.toLocaleString()}원)`;
+
+        // 알바생 버튼
         const hireBtn = document.getElementById("hire-btn");
         hireBtn.innerText = `👨‍🍳 알바생 고용 (비용: ${partTimeCost.toLocaleString()}원)`;
         hireBtn.disabled = money < partTimeCost;
+
+        // 메뉴 개발 버튼
+        const menuBtn = document.getElementById("menu-btn");
+        if (menuLevel < menuNames.length) {
+            const nextMenuName = menuNames[menuLevel];
+            menuBtn.innerText = `📜 ${nextMenuName} 개발 (비용: ${menuCost.toLocaleString()}원)`;
+            menuBtn.disabled = money < menuCost;
+        } else {
+            menuBtn.innerText = `✨ 모든 메뉴 개발 완료!`;
+            menuBtn.disabled = true;
+        }
     }
+
+    // 9. 게임 초기화
+    function resetGame() {
+        if (confirm("정말로 모든 진행 상황을 초기화하시겠습니까?")) {
+            localStorage.removeItem("chickenTycoonSave");
+            location.reload();
+        }
+    }
+
+    // 게임 시작 시 불러오기 실행
+    loadGame();
 </script>
 
 </body>
