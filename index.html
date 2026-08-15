@@ -7,57 +7,77 @@
     <style>
         body { font-family: sans-serif; text-align: center; background: #f8f9fa; padding: 20px 10px; }
         .card { background: white; max-width: 420px; margin: 0 auto; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .money-box { background: #fff4e6; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-        .money { font-size: 30px; font-weight: bold; color: #d9480e; }
-        .cps { font-size: 15px; color: #f59f00; margin-top: 5px; }
-        .btn { font-size: 17px; padding: 14px; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px; }
-        .btn-click { background: #ff922b; font-size: 20px; padding: 18px; }
+        .store-tag { display: inline-block; background: #37b24d; color: white; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; margin-bottom: 10px; }
+        .money-box { background: #fff4e6; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .money { font-size: 28px; font-weight: bold; color: #d9480e; }
+        .cps { font-size: 14px; color: #f59f00; margin-top: 5px; }
+        .multiplier { font-size: 13px; color: #2b8a3e; font-weight: bold; margin-top: 3px; }
+        
+        .chicken-display { width: 100%; height: 180px; border-radius: 12px; object-fit: cover; margin-bottom: 15px; border: 2px solid #ffe8cc; }
+        
+        .btn { font-size: 16px; padding: 14px; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px; }
+        .btn-click { background: #ff922b; font-size: 19px; padding: 16px; }
         .btn-click:active { transform: scale(0.98); }
         .btn-upgrade { background: #20c997; }
         .btn-menu { background: #4c6ef5; }
+        .btn-rebirth { background: #fcc419; color: #212529; font-size: 17px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .btn-reset { background: #adb5bd; font-size: 12px; padding: 6px; margin-top: 15px; }
-        .btn:disabled { background: #ced4da; cursor: not-allowed; }
+        .btn:disabled { background: #ced4da; color: #868e96; cursor: not-allowed; box-shadow: none; }
         .section-title { font-size: 14px; color: #868e96; text-align: left; margin: 15px 0 5px 2px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h1>🍗 치킨 타이쿤</h1>
+    <div id="store-tag" class="card-tag store-tag">🏠 송도 1호점</div>
     
     <div class="money-box">
         <div class="money">돈: <span id="money-text">0</span>원</div>
         <div class="cps">초당 자동 수익: <span id="cps-text">0</span>원 / sec</div>
+        <div class="multiplier">지점 보너스: <span id="multi-text">1</span>배 적용 중</div>
     </div>
+
+    <!-- 치킨 이미지 표시 영역 -->
+    <img id="chicken-img" class="chicken-display" src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=500&q=80" alt="치킨 이미지">
 
     <!-- 수동 튀기기 -->
     <button id="click-btn" class="btn btn-click" onclick="makeChicken()">🍗 후라이드 튀기기 (+100원)</button>
 
     <div class="section-title">매장 업그레이드</div>
-    <!-- 알바생 고용 -->
     <button id="hire-btn" class="btn btn-upgrade" onclick="hirePartTime()">👨‍🍳 알바생 고용 (비용: 1,000원)</button>
-    <!-- 메뉴 개발 -->
     <button id="menu-btn" class="btn btn-menu" onclick="upgradeMenu()">📜 신메뉴 개발 (비용: 2,000원)</button>
 
-    <!-- 데이터 초기화 -->
+    <div class="section-title">사업 확장 (환생)</div>
+    <button id="rebirth-btn" class="btn btn-rebirth" onclick="openNewStore()">🚀 다음 호점 개업하기 (필요: 1,000,000원)</button>
+
     <button class="btn btn-reset" onclick="resetGame()">데이터 초기화</button>
 </div>
 
 <script>
-    // 1. 게임 상태 변수
+    // 메뉴 정보 데이터 (이름, 이미지 URL)
+    const menuData = [
+        { name: "후라이드치킨", img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=500&q=80" },
+        { name: "양념치킨", img: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=500&q=80" },
+        { name: "반반치킨", img: "https://images.unsplash.com/photo-1562967914-608f82629710?w=500&q=80" },
+        { name: "간장치킨", img: "https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=500&q=80" },
+        { name: "뿌링클치킨", img: "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=500&q=80" },
+        { name: "황금올리브치킨", img: "https://images.unsplash.com/photo-1585325701165-351af916e581?w=500&q=80" }
+    ];
+
+    // 게임 변수
     let money = 0;
-    let clickPower = 100; // 클릭당 번는 돈
-    let cps = 0; // 초당 자동 수익
-    
+    let clickPower = 100;
+    let cps = 0;
     let partTimeCost = 1000;
     let menuCost = 2000;
     let menuLevel = 1;
+    
+    // 환생(호점) 변수
+    let storeLevel = 1; // 1호점, 2호점...
+    let rebirthCost = 1000000; // 100만 원 요구
 
-    const menuNames = ["후라이드", "양념치킨", "반반치킨", "간장치킨", "뿌링클치킨", "황금올리브"];
-
-    // 2. 저장된 데이터 불러오기
     function loadGame() {
-        const savedData = localStorage.getItem("chickenTycoonSave");
+        const savedData = localStorage.getItem("chickenTycoonSave_v2");
         if (savedData) {
             const data = JSON.parse(savedData);
             money = data.money || 0;
@@ -66,24 +86,23 @@
             partTimeCost = data.partTimeCost || 1000;
             menuCost = data.menuCost || 2000;
             menuLevel = data.menuLevel || 1;
+            storeLevel = data.storeLevel || 1;
+            rebirthCost = data.rebirthCost || 1000000;
         }
         updateUI();
     }
 
-    // 3. 현재 상태 저장하기
     function saveGame() {
-        const data = { money, clickPower, cps, partTimeCost, menuCost, menuLevel };
-        localStorage.setItem("chickenTycoonSave", JSON.stringify(data));
+        const data = { money, clickPower, cps, partTimeCost, menuCost, menuLevel, storeLevel, rebirthCost };
+        localStorage.setItem("chickenTycoonSave_v2", JSON.stringify(data));
     }
 
-    // 4. 수동 튀기기
     function makeChicken() {
-        money += clickPower;
+        money += clickPower * storeLevel; // 지점 보너스 적용
         updateUI();
         saveGame();
     }
 
-    // 5. 알바생 고용 (초당 수익 증가)
     function hirePartTime() {
         if (money >= partTimeCost) {
             money -= partTimeCost;
@@ -94,62 +113,84 @@
         }
     }
 
-    // 6. 신메뉴 개발 (클릭 수익 증가)
     function upgradeMenu() {
-        if (money >= menuCost && menuLevel < menuNames.length) {
+        if (money >= menuCost && menuLevel < menuData.length) {
             money -= menuCost;
             menuLevel++;
-            clickPower = menuLevel * 100; // 레벨당 100원씩 증가
+            clickPower = menuLevel * 100;
             menuCost = Math.floor(menuCost * 2.5);
             updateUI();
             saveGame();
         }
     }
 
-    // 7. 1초마다 자동 수익 방치 로직
+    // 2호점 개업 (환생)
+    function openNewStore() {
+        if (money >= rebirthCost) {
+            if (confirm(`🎉 ${storeLevel + 1}호점을 개업하시겠습니까?\n현재 모은 돈과 알바생은 리셋되지만, 모든 수익이 ${storeLevel + 1}배로 상승합니다!`)) {
+                storeLevel++;
+                money = 0;
+                clickPower = 100;
+                cps = 0;
+                partTimeCost = 1000;
+                menuCost = 2000;
+                menuLevel = 1;
+                rebirthCost = Math.floor(rebirthCost * 3); // 다음 개업 비용 증가
+                
+                updateUI();
+                saveGame();
+            }
+        }
+    }
+
     setInterval(() => {
         if (cps > 0) {
-            money += cps;
+            money += (cps * storeLevel); // 지점 보너스 적용
             updateUI();
             saveGame();
         }
     }, 1000);
 
-    // 8. 화면 UI 업데이트
     function updateUI() {
         document.getElementById("money-text").innerText = money.toLocaleString();
-        document.getElementById("cps-text").innerText = cps.toLocaleString();
+        document.getElementById("cps-text").innerText = (cps * storeLevel).toLocaleString();
+        document.getElementById("multi-text").innerText = storeLevel;
+        document.getElementById("store-tag").innerText = `🏠 ${storeLevel}호점`;
 
-        // 튀기기 버튼 텍스트
-        const currentMenuName = menuNames[menuLevel - 1] || "전설의 치킨";
-        document.getElementById("click-btn").innerText = `🍗 ${currentMenuName} 튀기기 (+${clickPower.toLocaleString()}원)`;
+        // 현재 메뉴 정보 & 이미지
+        const currentMenu = menuData[menuLevel - 1] || menuData[0];
+        document.getElementById("chicken-img").src = currentMenu.img;
+        document.getElementById("click-btn").innerText = `🍗 ${currentMenu.name} 튀기기 (+${(clickPower * storeLevel).toLocaleString()}원)`;
 
         // 알바생 버튼
         const hireBtn = document.getElementById("hire-btn");
         hireBtn.innerText = `👨‍🍳 알바생 고용 (비용: ${partTimeCost.toLocaleString()}원)`;
         hireBtn.disabled = money < partTimeCost;
 
-        // 메뉴 개발 버튼
+        // 메뉴 버튼
         const menuBtn = document.getElementById("menu-btn");
-        if (menuLevel < menuNames.length) {
-            const nextMenuName = menuNames[menuLevel];
-            menuBtn.innerText = `📜 ${nextMenuName} 개발 (비용: ${menuCost.toLocaleString()}원)`;
+        if (menuLevel < menuData.length) {
+            const nextMenu = menuData[menuLevel];
+            menuBtn.innerText = `📜 ${nextMenu.name} 개발 (비용: ${menuCost.toLocaleString()}원)`;
             menuBtn.disabled = money < menuCost;
         } else {
             menuBtn.innerText = `✨ 모든 메뉴 개발 완료!`;
             menuBtn.disabled = true;
         }
+
+        // 개업(환생) 버튼
+        const rebirthBtn = document.getElementById("rebirth-btn");
+        rebirthBtn.innerText = `🚀 ${storeLevel + 1}호점 개업하기 (필요: ${rebirthCost.toLocaleString()}원)`;
+        rebirthBtn.disabled = money < rebirthCost;
     }
 
-    // 9. 게임 초기화
     function resetGame() {
         if (confirm("정말로 모든 진행 상황을 초기화하시겠습니까?")) {
-            localStorage.removeItem("chickenTycoonSave");
+            localStorage.removeItem("chickenTycoonSave_v2");
             location.reload();
         }
     }
 
-    // 게임 시작 시 불러오기 실행
     loadGame();
 </script>
 
