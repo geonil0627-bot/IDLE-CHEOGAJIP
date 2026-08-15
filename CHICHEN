@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>치킨 타이쿤</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #f8f9fa; padding-top: 50px; }
+        .card { background: white; max-width: 400px; margin: 0 auto; padding: 30px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .money { font-size: 32px; font-weight: bold; color: #d9480e; margin: 20px 0; }
+        .chicken-btn { font-size: 24px; padding: 20px 40px; background: #ff922b; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .chicken-btn:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>🍗 치킨 타이쿤</h1>
+    <div class="money">돈: <span id="money-text">0</span>원</div>
+    <button class="chicken-btn" onclick="makeChicken()">치킨 튀기기!</button>
+</div>
+
+<script>
+    // 1. 핵심 변수 (돈)
+    let money = 0;
+
+    // 2. 치킨 튀기기 버튼 클릭 시 동작하는 함수
+    function makeChicken() {
+        money += 100; // 돈 100원 증가
+        document.getElementById("money-text").innerText = money.toLocaleString(); // 화면 갱신
+    }
+</script>
+
+</body>
+</html>
