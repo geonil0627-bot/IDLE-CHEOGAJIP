@@ -8,92 +8,89 @@
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f1f3f5; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
         
-        .app-container { width: 100%; max-width: 430px; height: 100vh; max-height: 932px; background: white; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        .app-container { width: 100%; max-width: 430px; height: 100vh; background: white; display: flex; flex-direction: column; position: relative; padding: 10px; justify-content: space-between; }
         
-        /* 상단 헤더 & 자산 정보 */
-        .header { padding: 10px 15px; background: #fff; border-bottom: 1px solid #f1f3f5; flex-shrink: 0; }
+        /* 헤더 영역 */
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        .store-badge { background: #d9480e; color: white; padding: 3px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; }
-        .header-btns { display: flex; gap: 5px; }
-        .btn-sm { padding: 4px 8px; font-size: 11px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; color: white; }
+        .store-badge { background: #d9480e; color: white; padding: 3px 8px; border-radius: 12px; font-weight: bold; font-size: 11px; }
+        .header-btns { display: flex; gap: 4px; }
+        .btn-sm { padding: 3px 7px; font-size: 10px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; color: white; }
         .btn-ledger { background: #339af0; }
         .btn-book { background: #20c997; }
 
-        .money-card { background: #fff4e6; padding: 10px 12px; border-radius: 10px; border: 1px solid #ffe8cc; text-align: center; }
-        .money-title { font-size: 11px; color: #868e96; }
-        .money-val { font-size: 20px; font-weight: 800; color: #d9480e; margin: 2px 0; }
-        .sub-stats { font-size: 11px; color: #f59f00; display: flex; justify-content: space-around; font-weight: 600; }
+        /* 자산 정보 */
+        .money-card { background: #fff4e6; padding: 6px; border-radius: 8px; border: 1px solid #ffe8cc; text-align: center; flex-shrink: 0; }
+        .money-title { font-size: 10px; color: #868e96; }
+        .money-val { font-size: 18px; font-weight: 800; color: #d9480e; margin: 1px 0; }
+        .sub-stats { font-size: 10px; color: #f59f00; display: flex; justify-content: space-around; font-weight: 600; }
 
-        /* 버너 경고바 */
-        .banner { display: none; padding: 6px; font-weight: bold; font-size: 11px; text-align: center; flex-shrink: 0; }
+        /* 이벤트 배너 & 버튼 */
+        .banner { display: none; padding: 4px; font-weight: bold; font-size: 10px; text-align: center; flex-shrink: 0; border-radius: 4px; margin-top: 4px; }
         .fever-banner { background: #e03131; color: white; }
         .penalty-banner { background: #495057; color: #ffc9c9; }
-
-        .btn-event { display: none; margin: 5px 12px 0 12px; padding: 8px; font-size: 12px; font-weight: bold; color: white; border: none; border-radius: 8px; cursor: pointer; animation: pulse 0.8s infinite alternate; flex-shrink: 0; }
+        .btn-event { display: none; margin-top: 4px; padding: 6px; font-size: 11px; font-weight: bold; color: white; border: none; border-radius: 6px; cursor: pointer; animation: pulse 0.8s infinite alternate; flex-shrink: 0; }
         .btn-fever { background: #f03e3e; }
         .btn-truck { background: #d9480e; }
         @keyframes pulse { from { opacity: 0.8; transform: scale(0.99); } to { opacity: 1; transform: scale(1.01); } }
 
-        /* 메인 컨텐츠 영역 */
-        .content { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; }
-        .tab-content { display: none; height: 100%; flex-direction: column; }
-        .tab-content.active { display: flex; }
+        /* 날짜 */
+        .day-info { font-size: 10px; color: #495057; font-weight: bold; margin: 4px 0 2px 0; text-align: left; }
 
-        /* 메인 클릭 메인 탭 */
-        .chicken-box { width: 100%; height: 170px; border-radius: 12px; background: #e9ecef; overflow: hidden; position: relative; border: 1px solid #dee2e6; margin-bottom: 10px; }
+        /* 메인 치킨 이미지 */
+        .chicken-box { width: 100%; height: 120px; border-radius: 8px; background: #e9ecef; overflow: hidden; position: relative; border: 1px solid #dee2e6; flex-shrink: 0; }
         .chicken-img { width: 100%; height: 100%; object-fit: cover; }
-        .menu-title-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; padding: 6px; font-size: 13px; font-weight: bold; text-align: center; }
+        .menu-title-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; padding: 3px; font-size: 11px; font-weight: bold; text-align: center; }
+
+        /* 섹션 타이틀 */
+        .section-title { font-size: 10px; color: #495057; margin: 3px 0 2px 0; font-weight: bold; border-left: 3px solid #ff922b; padding-left: 4px; text-align: left; }
 
         /* 공통 버튼 */
-        .btn { font-size: 13px; padding: 12px; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 8px; text-align: center; }
+        .btn { font-size: 11px; padding: 8px; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; text-align: center; flex-shrink: 0; }
         .btn:disabled { background: #ced4da !important; color: #868e96; cursor: not-allowed; }
-        .btn-click { background: #ff922b; font-size: 16px; padding: 16px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(255,146,43,0.3); }
-        .btn-click:active { transform: scale(0.97); }
+        .btn-click { background: #ff922b; font-size: 14px; padding: 10px; box-shadow: 0 2px 6px rgba(255,146,43,0.3); }
+        .btn-click:active { transform: scale(0.98); }
         .btn-menu { background: #4c6ef5; }
         .btn-upgrade { background: #20c997; }
         .btn-side { background: #845ef7; }
         .btn-minigame { background: #12b886; }
         .btn-store { background: #fcc419; color: #212529; }
-        .btn-reset { background: #adb5bd; font-size: 11px; padding: 6px; margin-top: auto; }
+        .btn-reset { background: #adb5bd; font-size: 9px; padding: 4px; margin-top: 2px; }
 
-        .section-title { font-size: 12px; color: #495057; margin: 8px 0 4px 0; font-weight: bold; border-left: 3px solid #ff922b; padding-left: 5px; }
-
-        /* 하단 고정 탭 바 */
-        .tab-bar { display: flex; height: 55px; border-top: 1px solid #e9ecef; background: #fff; flex-shrink: 0; }
-        .tab-item { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 11px; color: #868e96; cursor: pointer; font-weight: bold; }
-        .tab-item.active { color: #d9480e; border-top: 2px solid #d9480e; }
-        .tab-icon { font-size: 16px; margin-bottom: 2px; }
+        /* 2열 버튼 레이아웃 (공간 절약형) */
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
 
         /* Floating 클릭 효과 */
-        .float-text { position: absolute; font-weight: bold; font-size: 16px; color: #d9480e; pointer-events: none; animation: floatUp 0.7s ease-out forwards; z-index: 50; }
-        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-30px); } }
+        .float-text { position: absolute; font-weight: bold; font-size: 14px; color: #d9480e; pointer-events: none; animation: floatUp 0.6s ease-out forwards; z-index: 50; }
+        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-25px); } }
 
         /* 모달 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; }
-        .modal-content { background: white; padding: 18px; border-radius: 12px; width: 85%; max-width: 360px; max-height: 75vh; overflow-y: auto; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f3f5; padding-bottom: 8px; margin-bottom: 10px; }
-        .close-btn { cursor: pointer; font-weight: bold; font-size: 16px; color: #868e96; }
-        .ledger-item { padding: 6px 0; border-bottom: 1px dashed #e9ecef; font-size: 12px; display: flex; justify-content: space-between; }
-        .book-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-        .book-card { border: 1px solid #dee2e6; border-radius: 6px; padding: 8px; text-align: center; font-size: 11px; background: #f8f9fa; }
+        .modal-content { background: white; padding: 15px; border-radius: 10px; width: 85%; max-width: 340px; max-height: 70vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f3f5; padding-bottom: 6px; margin-bottom: 8px; }
+        .close-btn { cursor: pointer; font-weight: bold; font-size: 14px; color: #868e96; }
+        .ledger-item { padding: 5px 0; border-bottom: 1px dashed #e9ecef; font-size: 11px; display: flex; justify-content: space-between; }
+        .book-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+        .book-card { border: 1px solid #dee2e6; border-radius: 6px; padding: 6px; text-align: center; font-size: 10px; background: #f8f9fa; }
         .book-card.locked { opacity: 0.4; filter: grayscale(100%); }
 
         /* 미니게임 요솟값 */
-        .flyer-target { position: absolute; width: 45px; height: 45px; background: #ff922b; color: white; font-weight: bold; font-size: 11px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 60; }
+        .flyer-target { position: absolute; width: 40px; height: 40px; background: #ff922b; color: white; font-weight: bold; font-size: 10px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 60; }
     </style>
 </head>
 <body>
 
 <div class="app-container" id="main-card">
     <!-- 헤더 영역 -->
-    <div class="header">
+    <div>
         <div class="top-bar">
-            <span id="store-badge" class="store-badge">🍗 1호점 운영 중</span>
+            <span id="store-badge" class="store-badge">🍗 1개 지점 운영 중</span>
             <div class="header-btns">
                 <button class="btn-sm btn-ledger" onclick="openLedger()">📊 장부</button>
                 <button class="btn-sm btn-book" onclick="openBook()">📖 도감</button>
             </div>
         </div>
+        
+        <!-- 자산 카드가 상단에 위치 -->
         <div class="money-card">
             <div class="money-title">총 자산</div>
             <div class="money-val"><span id="money-text">0</span>원</div>
@@ -102,65 +99,43 @@
                 <span>초당: <span id="cps-text">0</span>원</span>
             </div>
         </div>
+
+        <!-- 버너 및 이벤트 버튼 -->
+        <div id="fever-banner" class="banner fever-banner">🔥 대형 유튜버 방문! 수익 5배! (<span id="fever-time">10</span>s)</div>
+        <div id="penalty-banner" class="banner penalty-banner">⚠️ 고객 클레임! 매출 30% 감소 (<span id="penalty-time">15</span>s)</div>
+
+        <button id="fever-btn" class="btn-event btn-fever" onclick="activateFever()">🎥 유튜버 매장 방문! (클릭하여 시작)</button>
+        <button id="truck-btn" class="btn-event btn-truck" onclick="activateTruck()">🚚 푸드트럭 챌린지! (클릭하여 매출 대폭발)</button>
+
+        <div class="day-info" id="day-text">📅 2026년 8월 16일 (남은시간: 1800s)</div>
+
+        <!-- 메인 치킨 이미지 및 기본 조리 버튼 -->
+        <div class="chicken-box">
+            <img id="chicken-img" class="chicken-img" src="./fride.jpg" alt="치킨 이미지">
+            <div id="menu-title-overlay" class="menu-title-overlay">후라이드치킨</div>
+        </div>
     </div>
 
-    <!-- 이벤트 버너 -->
-    <div id="fever-banner" class="banner fever-banner">🔥 대형 유튜버 방문! 수익 5배 폭증! (<span id="fever-time">10</span>s)</div>
-    <div id="penalty-banner" class="banner penalty-banner">⚠️ 고객 클레임! 매출 30% 감소 중 (<span id="penalty-time">15</span>s)</div>
+    <!-- 하단 주요 기능 조작부 (한 화면 배치) -->
+    <div>
+        <button id="click-btn" class="btn btn-click" onclick="makeChicken(event)">🍗 치킨 조리 (+100원)</button>
+        
+        <div class="section-title">신메뉴 개발</div>
+        <button id="menu-btn" class="btn btn-menu" onclick="upgradeMenu()">📜 신메뉴 개발</button>
 
-    <button id="fever-btn" class="btn-event btn-fever" onclick="activateFever()">🎥 유튜버 매장 방문! (클릭하여 버프 시작)</button>
-    <button id="truck-btn" class="btn-event btn-truck" onclick="activateTruck()">🚚 푸드트럭 챌린지! (클릭하여 매출 대폭발)</button>
-
-    <!-- 메인 컨텐츠 영역 (탭 전환) -->
-    <div class="content">
-        <!-- 1. 조리/클릭 탭 -->
-        <div id="tab-cook" class="tab-content active">
-            <div style="font-size: 11px; color: #495057; font-weight: bold; margin-bottom: 4px;" id="day-text">📅 2026년 8월 16일</div>
-            <div class="chicken-box">
-                <img id="chicken-img" class="chicken-img" src="./fride.jpg" alt="치킨 이미지">
-                <div id="menu-title-overlay" class="menu-title-overlay">후라이드치킨</div>
-            </div>
-            <button id="click-btn" class="btn btn-click" onclick="makeChicken(event)">🍗 치킨 조리 (+100원)</button>
-            
-            <div class="section-title">치킨 신메뉴 개발</div>
-            <button id="menu-btn" class="btn btn-menu" onclick="upgradeMenu()">📜 신메뉴 개발</button>
-        </div>
-
-        <!-- 2. 업그레이드 탭 -->
-        <div id="tab-upgrade" class="tab-content">
-            <div class="section-title">주방 알바 고용 (초당 자동 수익)</div>
-            <button id="hire-btn" class="btn btn-upgrade" onclick="hirePartTime()">👨‍🍳 주방 알바 고용</button>
-
-            <div class="section-title">사이드 메뉴 & 장비 추가</div>
+        <div class="section-title">자동 수익 & 사이드</div>
+        <div class="btn-grid">
+            <button id="hire-btn" class="btn btn-upgrade" onclick="hirePartTime()">👨‍🍳 알바 고용</button>
             <button id="side-btn" class="btn btn-side" onclick="buySide()">🥤 사이드 추가</button>
         </div>
 
-        <!-- 3. 확장 및 기타 탭 -->
-        <div id="tab-expand" class="tab-content">
-            <div class="section-title">가게 홍보 미니게임</div>
-            <button id="minigame-btn" class="btn btn-minigame" onclick="startFlyerMinigame()">📣 전단지 홍보 (10초 클릭 대작전)</button>
+        <div class="section-title">홍보 & 가맹점 사업</div>
+        <div class="btn-grid">
+            <button id="minigame-btn" class="btn btn-minigame" onclick="startFlyerMinigame()">📣 전단지 홍보</button>
+            <button id="store-btn" class="btn btn-store" onclick="openNewStore()">🚀 가맹점 개업</button>
+        </div>
 
-            <div class="section-title">가맹점 사업 확장</div>
-            <button id="store-btn" class="btn btn-store" onclick="openNewStore()">🚀 가맹점 개업하기</button>
-
-            <button class="btn btn-reset" onclick="resetGame()">데이터 초기화</button>
-        </div>
-    </div>
-
-    <!-- 하단 탭 메뉴 바 -->
-    <div class="tab-bar">
-        <div class="tab-item active" onclick="switchTab('tab-cook', this)">
-            <span class="tab-icon">🍗</span>
-            <span>조리/개발</span>
-        </div>
-        <div class="tab-item" onclick="switchTab('tab-upgrade', this)">
-            <span class="tab-icon">👨‍🍳</span>
-            <span>업그레이드</span>
-        </div>
-        <div class="tab-item" onclick="switchTab('tab-expand', this)">
-            <span class="tab-icon">🚀</span>
-            <span>홍보/확장</span>
-        </div>
+        <button class="btn btn-reset" onclick="resetGame()">데이터 초기화</button>
     </div>
 </div>
 
@@ -284,15 +259,8 @@
         }
     }
 
-    function switchTab(tabId, el) {
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.tab-item').forEach(item => item.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        el.classList.add('active');
-    }
-
     function loadGame() {
-        const savedData = localStorage.getItem("cheogajipTycoon_v11");
+        const savedData = localStorage.getItem("cheogajipTycoon_v12");
         if (savedData) {
             const data = JSON.parse(savedData);
             money = data.money || 0;
@@ -318,7 +286,7 @@
             partTimeCost, storeCount, storeCost, 
             currentYear, currentMonth, currentDay, dayTimer, salesLedger
         };
-        localStorage.setItem("cheogajipTycoon_v11", JSON.stringify(data));
+        localStorage.setItem("cheogajipTycoon_v12", JSON.stringify(data));
     }
 
     function getBaseCPS() {
@@ -343,7 +311,7 @@
         floatEl.style.top = `${y}px`;
 
         card.appendChild(floatEl);
-        setTimeout(() => floatEl.remove(), 700);
+        setTimeout(() => floatEl.remove(), 600);
     }
 
     function makeChicken(e) {
@@ -419,25 +387,25 @@
                 clearInterval(gameInterval);
                 isMinigameActive = false;
                 document.getElementById("minigame-btn").disabled = false;
-                document.getElementById("minigame-btn").innerText = "📣 전단지 홍보 (10초 클릭 대작전)";
+                document.getElementById("minigame-btn").innerText = "📣 전단지 홍보";
                 return;
             }
             
-            document.getElementById("minigame-btn").innerText = `📣 홍보 진행 중! (${timeLeft}초 남음)`;
+            document.getElementById("minigame-btn").innerText = `📣 홍보 중 (${timeLeft}s)`;
             timeLeft--;
 
             const target = document.createElement("div");
             target.className = "flyer-target";
             target.innerText = "전단지";
-            target.style.left = `${Math.random() * 260 + 30}px`;
-            target.style.top = `${Math.random() * 300 + 150}px`;
+            target.style.left = `${Math.random() * 240 + 20}px`;
+            target.style.top = `${Math.random() * 200 + 150}px`;
 
             target.onclick = (e) => {
                 const bonus = Math.floor(chickenMenuData[menuLevel].power * 5);
                 money += bonus;
                 dailyMoney += bonus;
                 playSound('click');
-                spawnFloatText(e, `홍보 성공! +${bonus.toLocaleString()}원`);
+                spawnFloatText(e, `+${bonus.toLocaleString()}원`);
                 target.remove();
                 updateUI();
             };
@@ -496,7 +464,7 @@
 
         money += truckSales;
         dailyMoney += truckSales;
-        alert(`🚚 [푸드트럭 행사 성공!]\n총 +${truckSales.toLocaleString()}원의 추가 매출 발생!`);
+        alert(`🚚 [푸드트럭 행사 성공!]\n총 +${truckSales.toLocaleString()}원 추가 매출 발생!`);
         updateUI();
         saveGame();
     }
@@ -584,7 +552,7 @@
         }
 
         const hireBtn = document.getElementById("hire-btn");
-        hireBtn.innerText = `👨‍🍳 주방 알바 고용 (${partTimeCost.toLocaleString()}원 / 보유: ${partTimeCount}명)`;
+        hireBtn.innerText = `👨‍🍳 알바 고용 (${partTimeCost.toLocaleString()}원 / ${partTimeCount}명)`;
         hireBtn.disabled = money < partTimeCost;
 
         const sideBtn = document.getElementById("side-btn");
@@ -593,12 +561,12 @@
             sideBtn.innerText = `🥤 ${nextSide.name} (${nextSide.cost.toLocaleString()}원)`;
             sideBtn.disabled = money < nextSide.cost;
         } else {
-            sideBtn.innerText = `✨ 모든 사이드 추가 완료!`;
+            sideBtn.innerText = `✨ 사이드 풀업!`;
             sideBtn.disabled = true;
         }
 
         const storeBtn = document.getElementById("store-btn");
-        storeBtn.innerText = `🚀 ${storeCount + 1}호 가맹점 개업 (${storeCost.toLocaleString()}원)`;
+        storeBtn.innerText = `🚀 ${storeCount + 1}호점 개업 (${storeCost.toLocaleString()}원)`;
         storeBtn.disabled = money < storeCost;
     }
 
@@ -621,7 +589,7 @@
         const bookGrid = document.getElementById("book-grid");
         bookGrid.innerHTML = chickenMenuData.map((menu, idx) => `
             <div class="book-card ${idx > menuLevel ? 'locked' : ''}">
-                <div style="font-size: 16px;">🍗</div>
+                <div style="font-size: 14px;">🍗</div>
                 <strong>${idx <= menuLevel ? menu.name : '????'}</strong>
                 <div style="color: #868e96; margin-top: 2px;">
                     ${idx <= menuLevel ? '+' + menu.power.toLocaleString() + '원' : '미해금'}
@@ -637,7 +605,7 @@
 
     function resetGame() {
         if (confirm("모든 진행 상황을 초기화하시겠습니까?")) {
-            localStorage.removeItem("cheogajipTycoon_v11");
+            localStorage.removeItem("cheogajipTycoon_v12");
             location.reload();
         }
     }
