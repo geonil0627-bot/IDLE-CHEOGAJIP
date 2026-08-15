@@ -6,34 +6,53 @@
     <title>처갓집 치킨 타이쿤</title>
     <style>
         body { font-family: sans-serif; text-align: center; background: #f8f9fa; padding: 20px 10px; }
-        .card { background: white; max-width: 440px; margin: 0 auto; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; }
+        .card { background: white; max-width: 460px; margin: 0 auto; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; }
         .store-badge { display: inline-block; background: #d9480e; color: white; padding: 5px 14px; border-radius: 20px; font-weight: bold; font-size: 14px; margin-bottom: 10px; }
         
-        .money-box { background: #fff4e6; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #ffe8cc; }
-        .money { font-size: 28px; font-weight: bold; color: #d9480e; }
-        .cps { font-size: 14px; color: #f59f00; margin-top: 5px; }
+        .day-box { background: #e7f5ff; padding: 8px 12px; border-radius: 8px; margin-bottom: 10px; font-size: 14px; font-weight: bold; color: #1971c2; display: flex; justify-content: space-between; align-items: center; }
         
-        .fever-banner { display: none; background: #e03131; color: white; padding: 10px; font-weight: bold; border-radius: 8px; margin-bottom: 10px; animation: pulse 0.8s infinite alternate; }
+        .money-box { background: #fff4e6; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #ffe8cc; }
+        .money { font-size: 26px; font-weight: bold; color: #d9480e; }
+        .daily-money { font-size: 14px; color: #e65100; margin-top: 4px; font-weight: bold; }
+        .cps { font-size: 13px; color: #f59f00; margin-top: 5px; }
+        
+        /* 이벤트 배너 스타일 */
+        .banner { display: none; padding: 10px; font-weight: bold; border-radius: 8px; margin-bottom: 10px; font-size: 13px; }
+        .fever-banner { background: #e03131; color: white; animation: pulse 0.8s infinite alternate; }
+        .penalty-banner { background: #495057; color: #ffc9c9; }
         @keyframes pulse { from { opacity: 0.7; } to { opacity: 1; transform: scale(1.02); } }
 
-        .chicken-container { width: 100%; height: 210px; border-radius: 12px; background: #f1f3f5; margin-bottom: 15px; border: 1px solid #dee2e6; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
+        .chicken-container { width: 100%; height: 200px; border-radius: 12px; background: #f1f3f5; margin-bottom: 15px; border: 1px solid #dee2e6; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
         .chicken-display { width: 100%; height: 100%; object-fit: cover; }
         .menu-title-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; padding: 8px; font-weight: bold; font-size: 15px; }
 
-        .btn { font-size: 15px; padding: 13px; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px; }
-        .btn-click { background: #ff922b; font-size: 18px; padding: 16px; }
+        .btn { font-size: 14px; padding: 12px; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px; }
+        .btn-click { background: #ff922b; font-size: 17px; padding: 15px; }
         .btn-click:active { transform: scale(0.98); }
         .btn-upgrade { background: #20c997; }
         .btn-menu { background: #4c6ef5; }
         .btn-side { background: #845ef7; }
-        .btn-fever { background: #f03e3e; font-size: 16px; display: none; margin-bottom: 15px; animation: bounce 0.5s infinite alternate; }
-        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-5px); } }
-        .btn-store { background: #fcc419; color: #212529; font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        
+        /* 특수 이벤트 버튼 */
+        .btn-event { display: none; font-size: 14px; margin-bottom: 10px; animation: bounce 0.5s infinite alternate; }
+        .btn-fever { background: #f03e3e; }
+        .btn-truck { background: #d9480e; border: 2px solid #ffd8a8; }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-4px); } }
+        
+        .btn-store { background: #fcc419; color: #212529; font-size: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-ledger { background: #339af0; padding: 6px 12px; font-size: 12px; width: auto; margin: 0; }
         .btn-reset { background: #adb5bd; font-size: 12px; padding: 6px; margin-top: 15px; }
         .btn:disabled { background: #ced4da; color: #868e96; cursor: not-allowed; box-shadow: none; }
         
-        .section-title { font-size: 14px; color: #495057; text-align: left; margin: 18px 0 6px 2px; font-weight: bold; border-left: 4px solid #ff922b; padding-left: 6px; }
+        .section-title { font-size: 14px; color: #495057; text-align: left; margin: 16px 0 6px 2px; font-weight: bold; border-left: 4px solid #ff922b; padding-left: 6px; }
         .store-list { background: #f8f9fa; padding: 10px; border-radius: 8px; font-size: 13px; text-align: left; color: #495057; margin-bottom: 10px; line-height: 1.6; }
+
+        /* 장부 모달 스타일 */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; }
+        .modal-content { background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto; text-align: left; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f3f5; padding-bottom: 10px; margin-bottom: 15px; }
+        .close-btn { cursor: pointer; font-weight: bold; font-size: 18px; color: #868e96; }
+        .ledger-item { padding: 8px 0; border-bottom: 1px border-dash #e9ecef; font-size: 13px; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body>
@@ -41,14 +60,25 @@
 <div class="card">
     <div id="store-badge" class="store-badge">🍗 처갓집 1개 지점 운영 중</div>
     
-    <div class="money-box">
-        <div class="money">돈: <span id="money-text">0</span>원</div>
-        <div class="cps">전체 지점 초당 수익: <span id="cps-text">0</span>원 / sec</div>
+    <!-- Day 및 장부 버튼 -->
+    <div class="day-box">
+        <span id="day-text">📅 1년 1월 1일 (다음 날까지: 1800초)</span>
+        <button class="btn btn-ledger" onclick="openLedger()">📊 장부 보기</button>
     </div>
 
-    <!-- 피버 버프 표시 -->
-    <div id="fever-banner" class="fever-banner">🔥 대형 유튜버 방문 버프! 전체 수익 5배 폭증 중! (<span id="fever-time">10</span>초)</div>
-    <button id="fever-btn" class="btn btn-fever" onclick="activateFever()">🎥 유튜버 매장 방문 이벤트 발생! (클릭하여 버프 시작)</button>
+    <div class="money-box">
+        <div class="money">총 자산: <span id="money-text">0</span>원</div>
+        <div class="daily-money">오늘 매출: <span id="daily-money-text">0</span>원</div>
+        <div class="cps">초당 수익: <span id="cps-text">0</span>원 / sec</div>
+    </div>
+
+    <!-- 이벤트 버프 & 패널티 안내 배너 -->
+    <div id="fever-banner" class="banner fever-banner">🔥 대형 유튜버 방문 버프! 전체 수익 5배 폭증 중! (<span id="fever-time">10</span>초)</div>
+    <div id="penalty-banner" class="banner penalty-banner">⚠️ 고객 클레임 발생! 평판 하락으로 매출 30% 감소 중 (<span id="penalty-time">15</span>초)</div>
+
+    <!-- 돌발 이벤트 클릭 버튼 -->
+    <button id="fever-btn" class="btn btn-event btn-fever" onclick="activateFever()">🎥 유튜버 매장 방문 이벤트 발생! (클릭하여 버프 시작)</button>
+    <button id="truck-btn" class="btn btn-event btn-truck" onclick="activateTruck()">🚚 처갓집 푸드트럭 챌린지 행사 개최! (클릭하여 매출 대폭발)</button>
 
     <!-- 이미지 영역 -->
     <div class="chicken-container">
@@ -73,8 +103,26 @@
     <button class="btn btn-reset" onclick="resetGame()">데이터 초기화</button>
 </div>
 
+<!-- 장부 모달 -->
+<div id="ledger-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 style="margin:0;">📊 매출 장부 기록</h3>
+            <span class="close-btn" onclick="closeLedger()">&times;</span>
+        </div>
+        <div id="ledger-list">
+            <p style="color:#868e96; text-align:center;">아직 기록된 일일 매출 데이터가 없습니다.</p>
+        </div>
+    </div>
+</div>
+
 <script>
-    // 전달받은 파일명 매핑 (테크 트리 난이도순 정렬)
+    // ==========================================
+    // [설정] Day 시스템 시간 설정 (기본 30분 = 1800초)
+    // 원하시는 시간(초 단위)으로 수정 가능합니다.
+    const DAY_DURATION_SEC = 1800; 
+    // ==========================================
+
     const chickenMenuData = [
         { name: "후라이드치킨", img: "images/fride.jpg", power: 100, cost: 0 },
         { name: "훈제치킨", img: "images/bbq.jpg", power: 200, cost: 1000 },
@@ -115,55 +163,61 @@
     ];
 
     let money = 0;
+    let dailyMoney = 0;
     let menuLevel = 0;
     let sideLevel = 0;
     let partTimeCount = 0;
     let partTimeCost = 1000;
-    
     let storeCount = 1;
     let storeCost = 500000;
-    let lastSaveTime = Date.now();
 
+    // Day 및 장부 데이터
+    let currentYear = 1;
+    let currentMonth = 1;
+    let currentDay = 1;
+    let dayTimer = DAY_DURATION_SEC;
+    let salesLedger = []; // 장부 기록 배열
+
+    // 버프 및 패널티 상태
     let isFever = false;
     let feverTimeLeft = 0;
     let feverMultiplier = 1;
+    let isPenalty = false;
+    let penaltyTimeLeft = 0;
+    let penaltyMultiplier = 1;
+
+    // 이벤트 타임아웃 타이머
+    let feverTimeoutTimer = null;
+    let truckTimeoutTimer = null;
 
     function loadGame() {
-        const savedData = localStorage.getItem("cheogajipTycoon_v7");
+        const savedData = localStorage.getItem("cheogajipTycoon_v8");
         if (savedData) {
             const data = JSON.parse(savedData);
             money = data.money || 0;
+            dailyMoney = data.dailyMoney || 0;
             menuLevel = data.menuLevel || 0;
             sideLevel = data.sideLevel || 0;
             partTimeCount = data.partTimeCount || 0;
             partTimeCost = data.partTimeCost || 1000;
             storeCount = data.storeCount || 1;
             storeCost = data.storeCost || 500000;
-            lastSaveTime = data.lastSaveTime || Date.now();
-
-            calculateOfflineEarnings();
+            currentYear = data.currentYear || 1;
+            currentMonth = data.currentMonth || 1;
+            currentDay = data.currentDay || 1;
+            dayTimer = data.dayTimer || DAY_DURATION_SEC;
+            salesLedger = data.salesLedger || [];
         }
         updateUI();
     }
 
-    function calculateOfflineEarnings() {
-        const now = Date.now();
-        const secondsOffline = Math.floor((now - lastSaveTime) / 1000);
-        const currentCps = getBaseCPS();
-        
-        if (secondsOffline > 5 && currentCps > 0) {
-            const offlineEarnings = secondsOffline * currentCps;
-            money += offlineEarnings;
-            alert(`🌙 오프라인 상태였던 ${secondsOffline}초 동안\n전체 가맹점에서 총 ${offlineEarnings.toLocaleString()}원의 수익을 올렸습니다!`);
-        }
-    }
-
     function saveGame() {
         const data = { 
-            money, menuLevel, sideLevel, partTimeCount, 
-            partTimeCost, storeCount, storeCost, lastSaveTime: Date.now() 
+            money, dailyMoney, menuLevel, sideLevel, partTimeCount, 
+            partTimeCost, storeCount, storeCost, 
+            currentYear, currentMonth, currentDay, dayTimer, salesLedger
         };
-        localStorage.setItem("cheogajipTycoon_v7", JSON.stringify(data));
+        localStorage.setItem("cheogajipTycoon_v8", JSON.stringify(data));
     }
 
     function getBaseCPS() {
@@ -171,12 +225,14 @@
         for (let i = 0; i < sideLevel; i++) {
             singleStoreCps += sideUpgradeData[i].cps;
         }
-        return singleStoreCps * storeCount;
+        return Math.floor(singleStoreCps * storeCount * feverMultiplier * penaltyMultiplier);
     }
 
     function makeChicken() {
         const currentMenu = chickenMenuData[menuLevel];
-        money += currentMenu.power * feverMultiplier;
+        const earned = Math.floor(currentMenu.power * feverMultiplier * penaltyMultiplier);
+        money += earned;
+        dailyMoney += earned;
         updateUI();
         saveGame();
     }
@@ -220,19 +276,49 @@
             money -= storeCost;
             storeCount++;
             storeCost = Math.floor(storeCost * 2.8);
-            alert(`🎉 축하합니다! ${storeCount}호 가맹점을 개업했습니다!\n모든 자동 수익 체인이 확장됩니다.`);
+            alert(`🎉 축하합니다! ${storeCount}호 가맹점을 개업했습니다!`);
             updateUI();
             saveGame();
         }
     }
 
+    // ==========================================
+    // 돌발 이벤트 관리 (유튜버, 푸드트럭, 클레임)
+    // ==========================================
     setInterval(() => {
-        if (!isFever && Math.random() < 0.2) {
-            document.getElementById("fever-btn").style.display = "block";
+        const rand = Math.random();
+
+        // 1. 유튜버 이벤트 (15% 확률)
+        if (!isFever && rand < 0.15 && document.getElementById("fever-btn").style.display !== "block") {
+            const btn = document.getElementById("fever-btn");
+            btn.style.display = "block";
+            
+            // 7초 내 클릭 안할 시 소멸
+            feverTimeoutTimer = setTimeout(() => {
+                btn.style.display = "none";
+            }, 7000);
         }
-    }, 30000);
+
+        // 2. 처갓집 푸드트럭 챌린지 행사 (3% 낮은 확률, 고수익)
+        if (rand > 0.97 && document.getElementById("truck-btn").style.display !== "block") {
+            const truckBtn = document.getElementById("truck-btn");
+            truckBtn.style.display = "block";
+
+            // 7초 내 클릭 안할 시 소멸
+            truckTimeoutTimer = setTimeout(() => {
+                truckBtn.style.display = "none";
+            }, 7000);
+        }
+
+        // 3. 고객 클레임 / 악성 리뷰 악재 이벤트 (8% 확률)
+        if (!isPenalty && rand > 0.85 && rand <= 0.93) {
+            triggerPenaltyEvent();
+        }
+
+    }, 20000);
 
     function activateFever() {
+        clearTimeout(feverTimeoutTimer);
         document.getElementById("fever-btn").style.display = "none";
         isFever = true;
         feverMultiplier = 5;
@@ -242,7 +328,6 @@
         const feverInterval = setInterval(() => {
             feverTimeLeft--;
             document.getElementById("fever-time").innerText = feverTimeLeft;
-
             if (feverTimeLeft <= 0) {
                 clearInterval(feverInterval);
                 isFever = false;
@@ -252,24 +337,108 @@
         }, 1000);
     }
 
+    function activateTruck() {
+        clearTimeout(truckTimeoutTimer);
+        document.getElementById("truck-btn").style.display = "none";
+
+        // 500만원 ~ 1000만원 사이, 백원 단위 랜덤 매출 발생 (예: 7,421,900원)
+        const baseVal = Math.floor(Math.random() * (10000000 - 5000000 + 1)) + 5000000;
+        const truckSales = Math.floor(baseVal / 100) * 100;
+
+        money += truckSales;
+        dailyMoney += truckSales;
+        alert(`🚚 [처갓집 챌린지 행사 대성공!]\n전국 푸드트럭 행사 방문으로 고객들이 몰려\n총 +${truckSales.toLocaleString()}원의 추가 매출이 발생했습니다!`);
+        updateUI();
+        saveGame();
+    }
+
+    function triggerPenaltyEvent() {
+        isPenalty = true;
+        penaltyMultiplier = 0.7; // 매출 30% 감소
+        penaltyTimeLeft = 15;
+        
+        const refundAmount = Math.min(money, Math.floor(Math.random() * 50000 + 10000));
+        money -= refundAmount;
+
+        alert(`⚠️ [고객 클레임 발생!]\n악성 리뷰 및 환불 요청으로 인해 ${refundAmount.toLocaleString()}원이 환불 처리되었으며, 15초간 매출이 30% 감소합니다.`);
+        document.getElementById("penalty-banner").style.display = "block";
+
+        const penaltyInterval = setInterval(() => {
+            penaltyTimeLeft--;
+            document.getElementById("penalty-time").innerText = penaltyTimeLeft;
+            if (penaltyTimeLeft <= 0) {
+                clearInterval(penaltyInterval);
+                isPenalty = false;
+                penaltyMultiplier = 1;
+                document.getElementById("penalty-banner").style.display = "none";
+            }
+        }, 1000);
+    }
+
+    // ==========================================
+    // 타이머 및 Day 시스템 루프 (1초마다 실행)
+    // ==========================================
     setInterval(() => {
-        const totalCps = getBaseCPS() * feverMultiplier;
-        if (totalCps > 0) {
-            money += totalCps;
-            updateUI();
-            saveGame();
+        // 초당 자동 매출 적용
+        const currentCps = getBaseCPS();
+        if (currentCps > 0) {
+            money += currentCps;
+            dailyMoney += currentCps;
         }
+
+        // Day 타이머 차감
+        dayTimer--;
+        if (dayTimer <= 0) {
+            advanceDay();
+        }
+
+        updateUI();
+        saveGame();
     }, 1000);
 
+    function advanceDay() {
+        // 장부에 기록 저장
+        salesLedger.unshift({
+            date: `${currentYear}년 ${currentMonth}월 ${currentDay}일`,
+            sales: dailyMoney
+        });
+
+        // 100개까지만 기록 유지
+        if (salesLedger.length > 100) salesLedger.pop();
+
+        // 일일 매출 초기화 및 날짜 업데이트
+        dailyMoney = 0;
+        dayTimer = DAY_DURATION_SEC;
+        currentDay++;
+
+        if (currentDay > 30) {
+            currentDay = 1;
+            currentMonth++;
+            if (currentMonth > 12) {
+                currentMonth = 1;
+                currentYear++;
+            }
+        }
+
+        alert(`🌅 새로운 날이 밝았습니다! (${currentYear}년 ${currentMonth}월 ${currentDay}일)\n전날 일일 매출이 장부에 안전하게 기록되었습니다.`);
+    }
+
+    // ==========================================
+    // UI 업데이트 및 장부 모달 관리
+    // ==========================================
     function updateUI() {
         document.getElementById("money-text").innerText = money.toLocaleString();
-        document.getElementById("cps-text").innerText = (getBaseCPS() * feverMultiplier).toLocaleString();
+        document.getElementById("daily-money-text").innerText = dailyMoney.toLocaleString();
+        document.getElementById("cps-text").innerText = getBaseCPS().toLocaleString();
         document.getElementById("store-badge").innerText = `🍗 처갓집 ${storeCount}개 지점 운영 중`;
+        document.getElementById("day-text").innerText = `📅 ${currentYear}년 ${currentMonth}월 ${currentDay}일 (다음 날까지: ${dayTimer}초)`;
 
         const currentMenu = chickenMenuData[menuLevel];
         document.getElementById("chicken-img").src = currentMenu.img;
         document.getElementById("menu-title-overlay").innerText = currentMenu.name;
-        document.getElementById("click-btn").innerText = `🍗 ${currentMenu.name} 조리 (+${(currentMenu.power * feverMultiplier).toLocaleString()}원)`;
+        
+        const clickEarn = Math.floor(currentMenu.power * feverMultiplier * penaltyMultiplier);
+        document.getElementById("click-btn").innerText = `🍗 ${currentMenu.name} 조리 (+${clickEarn.toLocaleString()}원)`;
 
         const menuBtn = document.getElementById("menu-btn");
         if (menuLevel < chickenMenuData.length - 1) {
@@ -295,15 +464,34 @@
             sideBtn.disabled = true;
         }
 
-        document.getElementById("store-list").innerText = `현재 총 ${storeCount}개 가맹점 운영 중 (지점당 초당 자동 수익 합산 반영)`;
+        document.getElementById("store-list").innerText = `현재 총 ${storeCount}개 가맹점 운영 중`;
         const storeBtn = document.getElementById("store-btn");
         storeBtn.innerText = `🚀 ${storeCount + 1}호 가맹점 개업하기 (비용: ${storeCost.toLocaleString()}원)`;
         storeBtn.disabled = money < storeCost;
     }
 
+    function openLedger() {
+        const ledgerList = document.getElementById("ledger-list");
+        if (salesLedger.length === 0) {
+            ledgerList.innerHTML = `<p style="color:#868e96; text-align:center;">아직 기록된 일일 매출 데이터가 없습니다.</p>`;
+        } else {
+            ledgerList.innerHTML = salesLedger.map(item => `
+                <div class="ledger-item">
+                    <span>${item.date}</span>
+                    <strong style="color:#d9480e;">${item.sales.toLocaleString()} 원</strong>
+                </div>
+            `).join('');
+        }
+        document.getElementById("ledger-modal").style.display = "flex";
+    }
+
+    function closeLedger() {
+        document.getElementById("ledger-modal").style.display = "none";
+    }
+
     function resetGame() {
         if (confirm("정말로 모든 진행 상황을 초기화하시겠습니까?")) {
-            localStorage.removeItem("cheogajipTycoon_v7");
+            localStorage.removeItem("cheogajipTycoon_v8");
             location.reload();
         }
     }
