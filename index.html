@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>치킨 타이쿤</title>
     <style>
-        body { font-family: sans-serif; text-align: center; background: #f8f9fa; padding-top: 50px; }
-        .card { background: white; max-width: 400px; margin: 0 auto; padding: 30px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .money { font-size: 32px; font-weight: bold; color: #d9480e; margin: 20px 0; }
-        .chicken-btn { font-size: 24px; padding: 20px 40px; background: #ff922b; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
-        .chicken-btn:active { transform: scale(0.95); }
+        body { font-family: sans-serif; text-align: center; background: #f8f9fa; padding: 30px 10px; }
+        .card { background: white; max-width: 400px; margin: 0 auto; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .money { font-size: 32px; font-weight: bold; color: #d9480e; margin: 15px 0; }
+        .cps { font-size: 16px; color: #868e96; margin-bottom: 20px; }
+        .btn { font-size: 18px; padding: 15px 30px; background: #ff922b; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px; }
+        .btn-upgrade { background: #20c997; }
+        .btn:disabled { background: #ced4da; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -17,17 +19,47 @@
 <div class="card">
     <h1>🍗 치킨 타이쿤</h1>
     <div class="money">돈: <span id="money-text">0</span>원</div>
-    <button class="chicken-btn" onclick="makeChicken()">치킨 튀기기!</button>
+    <div class="cps">초당 수익: <span id="cps-text">0</span>원</div>
+
+    <button class="btn" onclick="makeChicken()">🍗 치킨 튀기기 (+100원)</button>
+    <button id="hire-btn" class="btn btn-upgrade" onclick="hirePartTime()">👨‍🍳 알바생 고용 (비용: 1,000원)</button>
 </div>
 
 <script>
-    // 1. 핵심 변수 (돈)
     let money = 0;
+    let cps = 0; // 초당 수익 (Cost Per Second)
+    let partTimeCost = 1000;
 
-    // 2. 치킨 튀기기 버튼 클릭 시 동작하는 함수
+    // 수동 튀기기
     function makeChicken() {
-        money += 100; // 돈 100원 증가
-        document.getElementById("money-text").innerText = money.toLocaleString(); // 화면 갱신
+        money += 100;
+        updateUI();
+    }
+
+    // 알바생 고용 (초당 자동 수익)
+    function hirePartTime() {
+        if (money >= partTimeCost) {
+            money -= partTimeCost;
+            cps += 200; // 초당 200원씩 증가
+            partTimeCost = Math.floor(partTimeCost * 1.5); // 다음 고용 비용 증가
+            updateUI();
+        }
+    }
+
+    // 1초마다 자동으로 돈 추가 (방치형 핵심)
+    setInterval(() => {
+        money += cps;
+        updateUI();
+    }, 1000);
+
+    // 화면 갱신
+    function updateUI() {
+        document.getElementById("money-text").innerText = money.toLocaleString();
+        document.getElementById("cps-text").innerText = cps.toLocaleString();
+        
+        const hireBtn = document.getElementById("hire-btn");
+        hireBtn.innerText = `👨‍🍳 알바생 고용 (비용: ${partTimeCost.toLocaleString()}원)`;
+        hireBtn.disabled = money < partTimeCost;
     }
 </script>
 
