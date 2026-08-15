@@ -16,13 +16,12 @@
         .daily-money { font-size: 14px; color: #e65100; margin-top: 4px; font-weight: bold; }
         .cps { font-size: 13px; color: #f59f00; margin-top: 5px; }
         
-        /* 이벤트 배너 스타일 */
         .banner { display: none; padding: 10px; font-weight: bold; border-radius: 8px; margin-bottom: 10px; font-size: 13px; }
         .fever-banner { background: #e03131; color: white; animation: pulse 0.8s infinite alternate; }
         .penalty-banner { background: #495057; color: #ffc9c9; }
         @keyframes pulse { from { opacity: 0.7; } to { opacity: 1; transform: scale(1.02); } }
 
-        .chicken-container { width: 100%; height: 200px; border-radius: 12px; background: #f1f3f5; margin-bottom: 15px; border: 1px solid #dee2e6; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
+        .chicken-container { width: 100%; height: 200px; border-radius: 12px; background: #e9ecef; margin-bottom: 15px; border: 1px solid #dee2e6; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
         .chicken-display { width: 100%; height: 100%; object-fit: cover; }
         .menu-title-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; padding: 8px; font-weight: bold; font-size: 15px; }
 
@@ -33,7 +32,6 @@
         .btn-menu { background: #4c6ef5; }
         .btn-side { background: #845ef7; }
         
-        /* 특수 이벤트 버튼 */
         .btn-event { display: none; font-size: 14px; margin-bottom: 10px; animation: bounce 0.5s infinite alternate; }
         .btn-fever { background: #f03e3e; }
         .btn-truck { background: #d9480e; border: 2px solid #ffd8a8; }
@@ -47,7 +45,6 @@
         .section-title { font-size: 14px; color: #495057; text-align: left; margin: 16px 0 6px 2px; font-weight: bold; border-left: 4px solid #ff922b; padding-left: 6px; }
         .store-list { background: #f8f9fa; padding: 10px; border-radius: 8px; font-size: 13px; text-align: left; color: #495057; margin-bottom: 10px; line-height: 1.6; }
 
-        /* 장부 모달 스타일 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; }
         .modal-content { background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto; text-align: left; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f3f5; padding-bottom: 10px; margin-bottom: 15px; }
@@ -60,9 +57,8 @@
 <div class="card">
     <div id="store-badge" class="store-badge">🍗 처갓집 1개 지점 운영 중</div>
     
-    <!-- Day 및 장부 버튼 -->
     <div class="day-box">
-        <span id="day-text">📅 1년 1월 1일 (다음 날까지: 1800초)</span>
+        <span id="day-text">📅 2026년 8월 15일 (다음 날까지: 1800초)</span>
         <button class="btn btn-ledger" onclick="openLedger()">📊 장부 보기</button>
     </div>
 
@@ -72,21 +68,17 @@
         <div class="cps">초당 수익: <span id="cps-text">0</span>원 / sec</div>
     </div>
 
-    <!-- 이벤트 버프 & 패널티 안내 배너 -->
     <div id="fever-banner" class="banner fever-banner">🔥 대형 유튜버 방문 버프! 전체 수익 5배 폭증 중! (<span id="fever-time">10</span>초)</div>
     <div id="penalty-banner" class="banner penalty-banner">⚠️ 고객 클레임 발생! 평판 하락으로 매출 30% 감소 중 (<span id="penalty-time">15</span>초)</div>
 
-    <!-- 돌발 이벤트 클릭 버튼 -->
     <button id="fever-btn" class="btn btn-event btn-fever" onclick="activateFever()">🎥 유튜버 매장 방문 이벤트 발생! (클릭하여 버프 시작)</button>
     <button id="truck-btn" class="btn btn-event btn-truck" onclick="activateTruck()">🚚 처갓집 푸드트럭 챌린지 행사 개최! (클릭하여 매출 대폭발)</button>
 
-    <!-- 이미지 영역 -->
     <div class="chicken-container">
-        <img id="chicken-img" class="chicken-display" src="images/fride.jpg" alt="치킨 이미지" onerror="this.src='https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&q=80'">
+        <img id="chicken-img" class="chicken-display" src="./fride.jpg" alt="치킨 이미지">
         <div id="menu-title-overlay" class="menu-title-overlay">후라이드치킨</div>
     </div>
 
-    <!-- 조리 버튼 -->
     <button id="click-btn" class="btn btn-click" onclick="makeChicken()">🍗 후라이드치킨 조리 (+100원)</button>
 
     <div class="section-title">치킨 메뉴 개발</div>
@@ -103,7 +95,6 @@
     <button class="btn btn-reset" onclick="resetGame()">데이터 초기화</button>
 </div>
 
-<!-- 장부 모달 -->
 <div id="ledger-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -119,27 +110,27 @@
 <script>
     // ==========================================
     // [설정] Day 시스템 시간 설정 (기본 30분 = 1800초)
-    // 원하시는 시간(초 단위)으로 수정 가능합니다.
     const DAY_DURATION_SEC = 1800; 
     // ==========================================
 
+    // HTML 동일 폴더 기준 경로 설정 (./파일명.jpg)
     const chickenMenuData = [
-        { name: "후라이드치킨", img: "images/fride.jpg", power: 100, cost: 0 },
-        { name: "훈제치킨", img: "images/bbq.jpg", power: 200, cost: 1000 },
-        { name: "반반치킨", img: "images/half.jpg", power: 450, cost: 3500 },
-        { name: "허니올리고당야채양념치킨", img: "images/flavor.jpg", power: 800, cost: 10000 },
-        { name: "닭강정", img: "images/point.jpg", power: 1400, cost: 25000 },
-        { name: "와락간장치킨", img: "images/soy.jpg", power: 2300, cost: 60000 },
-        { name: "슈프림양념치킨", img: "images/suprem.jpg", power: 3800, cost: 150000 },
-        { name: "치즈슈프림양념치킨", img: "images/cheese.jpg", power: 6000, cost: 350000 },
-        { name: "핫슈프림양념치킨", img: "images/hot.jpg", power: 9500, cost: 800000 },
-        { name: "슈프림골드양념치킨", img: "images/gold.jpg", power: 15000, cost: 1800000 },
-        { name: "블랙라벨양념치킨", img: "images/black.jpg", power: 24000, cost: 4000000 },
-        { name: "매운불양념치킨", img: "images/spicy.jpg", power: 38000, cost: 9000000 },
-        { name: "100%청양산고추치킨", img: "images/spicy100.jpg", power: 60000, cost: 20000000 },
-        { name: "K마라양념치킨", img: "images/k.jpg", power: 95000, cost: 45000000 },
-        { name: "미트칠리양념치킨", img: "images/meat.jpg", power: 150000, cost: 100000000 },
-        { name: "세트치킨", img: "images/set.jpg", power: 250000, cost: 250000000 }
+        { name: "후라이드치킨", img: "./fride.jpg", power: 100, cost: 0 },
+        { name: "훈제치킨", img: "./bbq.jpg", power: 200, cost: 1000 },
+        { name: "반반치킨", img: "./half.jpg", power: 450, cost: 3500 },
+        { name: "허니올리고당야채양념치킨", img: "./flavor.jpg", power: 800, cost: 10000 },
+        { name: "닭강정", img: "./point.jpg", power: 1400, cost: 25000 },
+        { name: "와락간장치킨", img: "./soy.jpg", power: 2300, cost: 60000 },
+        { name: "슈프림양념치킨", img: "./suprem.jpg", power: 3800, cost: 150000 },
+        { name: "치즈슈프림양념치킨", img: "./cheese.jpg", power: 6000, cost: 350000 },
+        { name: "핫슈프림양념치킨", img: "./hot.jpg", power: 9500, cost: 800000 },
+        { name: "슈프림골드양념치킨", img: "./gold.jpg", power: 15000, cost: 1800000 },
+        { name: "블랙라벨양념치킨", img: "./black.jpg", power: 24000, cost: 4000000 },
+        { name: "매운불양념치킨", img: "./spicy.jpg", power: 38000, cost: 9000000 },
+        { name: "100%청양산고추치킨", img: "./spicy100.jpg", power: 60000, cost: 20000000 },
+        { name: "K마라양념치킨", img: "./k.jpg", power: 95000, cost: 45000000 },
+        { name: "미트칠리양념치킨", img: "./meat.jpg", power: 150000, cost: 100000000 },
+        { name: "세트치킨", img: "./set.jpg", power: 250000, cost: 250000000 }
     ];
 
     const sideUpgradeData = [
@@ -171,14 +162,15 @@
     let storeCount = 1;
     let storeCost = 500000;
 
-    // Day 및 장부 데이터
-    let currentYear = 1;
-    let currentMonth = 1;
-    let currentDay = 1;
-    let dayTimer = DAY_DURATION_SEC;
-    let salesLedger = []; // 장부 기록 배열
+    // 현실 날짜 기반 연/월/일 초기화
+    const today = new Date();
+    let currentYear = today.getFullYear();
+    let currentMonth = today.getMonth() + 1;
+    let currentDay = today.getDate();
 
-    // 버프 및 패널티 상태
+    let dayTimer = DAY_DURATION_SEC;
+    let salesLedger = [];
+
     let isFever = false;
     let feverTimeLeft = 0;
     let feverMultiplier = 1;
@@ -186,12 +178,11 @@
     let penaltyTimeLeft = 0;
     let penaltyMultiplier = 1;
 
-    // 이벤트 타임아웃 타이머
     let feverTimeoutTimer = null;
     let truckTimeoutTimer = null;
 
     function loadGame() {
-        const savedData = localStorage.getItem("cheogajipTycoon_v8");
+        const savedData = localStorage.getItem("cheogajipTycoon_v9");
         if (savedData) {
             const data = JSON.parse(savedData);
             money = data.money || 0;
@@ -202,9 +193,9 @@
             partTimeCost = data.partTimeCost || 1000;
             storeCount = data.storeCount || 1;
             storeCost = data.storeCost || 500000;
-            currentYear = data.currentYear || 1;
-            currentMonth = data.currentMonth || 1;
-            currentDay = data.currentDay || 1;
+            currentYear = data.currentYear || currentYear;
+            currentMonth = data.currentMonth || currentMonth;
+            currentDay = data.currentDay || currentDay;
             dayTimer = data.dayTimer || DAY_DURATION_SEC;
             salesLedger = data.salesLedger || [];
         }
@@ -217,7 +208,7 @@
             partTimeCost, storeCount, storeCost, 
             currentYear, currentMonth, currentDay, dayTimer, salesLedger
         };
-        localStorage.setItem("cheogajipTycoon_v8", JSON.stringify(data));
+        localStorage.setItem("cheogajipTycoon_v9", JSON.stringify(data));
     }
 
     function getBaseCPS() {
@@ -282,39 +273,24 @@
         }
     }
 
-    // ==========================================
-    // 돌발 이벤트 관리 (유튜버, 푸드트럭, 클레임)
-    // ==========================================
     setInterval(() => {
         const rand = Math.random();
 
-        // 1. 유튜버 이벤트 (15% 확률)
         if (!isFever && rand < 0.15 && document.getElementById("fever-btn").style.display !== "block") {
             const btn = document.getElementById("fever-btn");
             btn.style.display = "block";
-            
-            // 7초 내 클릭 안할 시 소멸
-            feverTimeoutTimer = setTimeout(() => {
-                btn.style.display = "none";
-            }, 7000);
+            feverTimeoutTimer = setTimeout(() => { btn.style.display = "none"; }, 7000);
         }
 
-        // 2. 처갓집 푸드트럭 챌린지 행사 (3% 낮은 확률, 고수익)
         if (rand > 0.97 && document.getElementById("truck-btn").style.display !== "block") {
             const truckBtn = document.getElementById("truck-btn");
             truckBtn.style.display = "block";
-
-            // 7초 내 클릭 안할 시 소멸
-            truckTimeoutTimer = setTimeout(() => {
-                truckBtn.style.display = "none";
-            }, 7000);
+            truckTimeoutTimer = setTimeout(() => { truckBtn.style.display = "none"; }, 7000);
         }
 
-        // 3. 고객 클레임 / 악성 리뷰 악재 이벤트 (8% 확률)
         if (!isPenalty && rand > 0.85 && rand <= 0.93) {
             triggerPenaltyEvent();
         }
-
     }, 20000);
 
     function activateFever() {
@@ -341,7 +317,6 @@
         clearTimeout(truckTimeoutTimer);
         document.getElementById("truck-btn").style.display = "none";
 
-        // 500만원 ~ 1000만원 사이, 백원 단위 랜덤 매출 발생 (예: 7,421,900원)
         const baseVal = Math.floor(Math.random() * (10000000 - 5000000 + 1)) + 5000000;
         const truckSales = Math.floor(baseVal / 100) * 100;
 
@@ -354,7 +329,7 @@
 
     function triggerPenaltyEvent() {
         isPenalty = true;
-        penaltyMultiplier = 0.7; // 매출 30% 감소
+        penaltyMultiplier = 0.7;
         penaltyTimeLeft = 15;
         
         const refundAmount = Math.min(money, Math.floor(Math.random() * 50000 + 10000));
@@ -375,18 +350,13 @@
         }, 1000);
     }
 
-    // ==========================================
-    // 타이머 및 Day 시스템 루프 (1초마다 실행)
-    // ==========================================
     setInterval(() => {
-        // 초당 자동 매출 적용
         const currentCps = getBaseCPS();
         if (currentCps > 0) {
             money += currentCps;
             dailyMoney += currentCps;
         }
 
-        // Day 타이머 차감
         dayTimer--;
         if (dayTimer <= 0) {
             advanceDay();
@@ -397,35 +367,25 @@
     }, 1000);
 
     function advanceDay() {
-        // 장부에 기록 저장
         salesLedger.unshift({
             date: `${currentYear}년 ${currentMonth}월 ${currentDay}일`,
             sales: dailyMoney
         });
 
-        // 100개까지만 기록 유지
         if (salesLedger.length > 100) salesLedger.pop();
 
-        // 일일 매출 초기화 및 날짜 업데이트
         dailyMoney = 0;
         dayTimer = DAY_DURATION_SEC;
-        currentDay++;
 
-        if (currentDay > 30) {
-            currentDay = 1;
-            currentMonth++;
-            if (currentMonth > 12) {
-                currentMonth = 1;
-                currentYear++;
-            }
-        }
+        // 실제 달력 계산을 통해 윤년/말일 자동 처리 후 1일 추가
+        let nextDate = new Date(currentYear, currentMonth - 1, currentDay + 1);
+        currentYear = nextDate.getFullYear();
+        currentMonth = nextDate.getMonth() + 1;
+        currentDay = nextDate.getDate();
 
         alert(`🌅 새로운 날이 밝았습니다! (${currentYear}년 ${currentMonth}월 ${currentDay}일)\n전날 일일 매출이 장부에 안전하게 기록되었습니다.`);
     }
 
-    // ==========================================
-    // UI 업데이트 및 장부 모달 관리
-    // ==========================================
     function updateUI() {
         document.getElementById("money-text").innerText = money.toLocaleString();
         document.getElementById("daily-money-text").innerText = dailyMoney.toLocaleString();
@@ -491,7 +451,7 @@
 
     function resetGame() {
         if (confirm("정말로 모든 진행 상황을 초기화하시겠습니까?")) {
-            localStorage.removeItem("cheogajipTycoon_v8");
+            localStorage.removeItem("cheogajipTycoon_v9");
             location.reload();
         }
     }
