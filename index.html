@@ -16,8 +16,10 @@
         .fever-banner { display: none; background: #e03131; color: white; padding: 10px; font-weight: bold; border-radius: 8px; margin-bottom: 10px; animation: pulse 0.8s infinite alternate; }
         @keyframes pulse { from { opacity: 0.7; } to { opacity: 1; transform: scale(1.02); } }
 
-        .chicken-display { width: 100%; height: 210px; border-radius: 12px; object-fit: contain; background: #f1f3f5; margin-bottom: 15px; border: 1px solid #dee2e6; }
-        
+        .chicken-container { width: 100%; height: 210px; border-radius: 12px; background: #f1f3f5; margin-bottom: 15px; border: 1px solid #dee2e6; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
+        .chicken-display { width: 100%; height: 100%; object-fit: cover; }
+        .menu-title-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; padding: 8px; font-weight: bold; font-size: 15px; }
+
         .btn { font-size: 15px; padding: 13px; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px; }
         .btn-click { background: #ff922b; font-size: 18px; padding: 16px; }
         .btn-click:active { transform: scale(0.98); }
@@ -48,8 +50,11 @@
     <div id="fever-banner" class="fever-banner">🔥 대형 유튜버 방문 버프! 전체 수익 5배 폭증 중! (<span id="fever-time">10</span>초)</div>
     <button id="fever-btn" class="btn btn-fever" onclick="activateFever()">🎥 유튜버 매장 방문 이벤트 발생! (클릭하여 버프 시작)</button>
 
-    <!-- 이미지 영역 -->
-    <img id="chicken-img" class="chicken-display" src="https://www.cheogajip.co.kr/theme/basic/img/allmenu/menu_fried.jpg" alt="메뉴 이미지">
+    <!-- 이미지 영역 (에러 처리 및 대체 이미지 호스팅 적용) -->
+    <div class="chicken-container">
+        <img id="chicken-img" class="chicken-display" src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&q=80" alt="치킨 이미지" onerror="this.src='https://images.unsplash.com/photo-1562967914-608f82629710?w=600&q=80'">
+        <div id="menu-title-overlay" class="menu-title-overlay">후라이드치킨</div>
+    </div>
 
     <!-- 조리 버튼 -->
     <button id="click-btn" class="btn btn-click" onclick="makeChicken()">🍗 후라이드치킨 조리 (+100원)</button>
@@ -69,28 +74,27 @@
 </div>
 
 <script>
-    // 수정된 치킨 메뉴 데이터
+    // 외부 브라우저에서 차단되지 않는 고화질 치킨 이미지 URL 세트
     const chickenMenuData = [
-        { name: "후라이드치킨", img: "https://www.cheogajip.co.kr/theme/basic/img/allmenu/menu_fried.jpg", power: 100, cost: 0 },
-        { name: "처갓집양념치킨", img: "https://www.cheogajip.co.kr/theme/basic/img/allmenu/menu_yangnyum.jpg", power: 250, cost: 1500 },
-        { name: "반반치킨", img: "https://www.cheogajip.co.kr/theme/basic/img/allmenu/menu_banban.jpg", power: 500, cost: 5000 },
-        { name: "매운양념치킨", img: "https://www.cheogajip.co.kr/theme/basic/img/allmenu/menu_spicy_yangnyum.jpg", power: 900, cost: 15000 },
-        { name: "와락치킨", img: "https://www.cheogajip.co.kr/theme/basic/img/allmenu/menu_warak.jpg", power: 1500, cost: 40000 },
-        { name: "슈프림양념치킨", img: "https://www.cheogajip.co.kr/theme/basic/img/allmenu/menu_supreme.jpg", power: 2500, cost: 100000 },
-        { name: "핫슈프림양념치킨", img: "https://www.cheogajip.co.kr/theme/basic/img/allmenu/menu_hotsupreme.jpg", power: 4000, cost: 250000 },
-        { name: "슈프림골드양념치킨", img: "https://www.cheogajip.co.kr/theme/basic/img/allmenu/menu_supremegold.jpg", power: 6500, cost: 600000 },
-        { name: "트러플슈프림양념치킨", img: "https://www.cheogajip.co.kr/theme/basic/img/allmenu/menu_trufflesupreme.jpg", power: 10000, cost: 1500000 },
-        { name: "블랙라벨양념치킨", img: "https://www.cheogajip.co.kr/theme/basic/img/allmenu/menu_blacklabel.jpg", power: 16000, cost: 3500000 },
-        { name: "닭강정", img: "https://www.cheogajip.co.kr/theme/basic/img/allmenu/menu_gangjung.jpg", power: 25000, cost: 8000000 },
-        { name: "K마라양념치킨", img: "https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=500&q=80", power: 40000, cost: 18000000 },
-        { name: "미트칠리양념치킨", img: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=500&q=80", power: 65000, cost: 40000000 },
-        { name: "꼬꼬뱅양념치킨", img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=500&q=80", power: 100000, cost: 100000000 },
-        { name: "꼬꼬뱅슈프림양념치킨", img: "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=500&q=80", power: 160000, cost: 250000000 },
-        { name: "매운불양념치킨", img: "https://www.cheogajip.co.kr/theme/basic/img/allmenu/menu_bul_yangnyum.jpg", power: 250000, cost: 600000000 },
-        { name: "허니올리고당야채양념치킨", img: "https://www.cheogajip.co.kr/theme/basic/img/allmenu/menu_honeyoll.jpg", power: 400000, cost: 1500000000 }
+        { name: "후라이드치킨", img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&q=80", power: 100, cost: 0 },
+        { name: "처갓집양념치킨", img: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=600&q=80", power: 250, cost: 1500 },
+        { name: "반반치킨", img: "https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=600&q=80", power: 500, cost: 5000 },
+        { name: "매운양념치킨", img: "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=600&q=80", power: 900, cost: 15000 },
+        { name: "와락치킨", img: "https://images.unsplash.com/photo-1562967916-eb82221dfb92?w=600&q=80", power: 1500, cost: 40000 },
+        { name: "슈프림양념치킨", img: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=600&q=80", power: 2500, cost: 100000 },
+        { name: "핫슈프림양념치킨", img: "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=600&q=80", power: 4000, cost: 250000 },
+        { name: "슈프림골드양념치킨", img: "https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=600&q=80", power: 6500, cost: 600000 },
+        { name: "트러플슈프림양념치킨", img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&q=80", power: 10000, cost: 1500000 },
+        { name: "블랙라벨양념치킨", img: "https://images.unsplash.com/photo-1562967916-eb82221dfb92?w=600&q=80", power: 16000, cost: 3500000 },
+        { name: "닭강정", img: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=600&q=80", power: 25000, cost: 8000000 },
+        { name: "K마라양념치킨", img: "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=600&q=80", power: 40000, cost: 18000000 },
+        { name: "미트칠리양념치킨", img: "https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=600&q=80", power: 65000, cost: 40000000 },
+        { name: "꼬꼬뱅양념치킨", img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&q=80", power: 100000, cost: 100000000 },
+        { name: "꼬꼬뱅슈프림양념치킨", img: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=600&q=80", power: 160000, cost: 250000000 },
+        { name: "매운불양념치킨", img: "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=600&q=80", power: 250000, cost: 600000000 },
+        { name: "허니올리고당야채양념치킨", img: "https://images.unsplash.com/photo-1562967916-eb82221dfb92?w=600&q=80", power: 400000, cost: 1500000000 }
     ];
 
-    // 요청받은 사이드 메뉴 반영 데이터
     const sideUpgradeData = [
         { name: "치킨무", cps: 50, cost: 800 },
         { name: "치킨치즈볼", cps: 150, cost: 2500 },
@@ -111,7 +115,6 @@
         { name: "골뱅이무침", cps: 7000000, cost: 1000000000 }
     ];
 
-    // 게임 상태 변수
     let money = 0;
     let menuLevel = 0;
     let sideLevel = 0;
@@ -127,7 +130,7 @@
     let feverMultiplier = 1;
 
     function loadGame() {
-        const savedData = localStorage.getItem("cheogajipTycoon_v5");
+        const savedData = localStorage.getItem("cheogajipTycoon_v6");
         if (savedData) {
             const data = JSON.parse(savedData);
             money = data.money || 0;
@@ -161,7 +164,7 @@
             money, menuLevel, sideLevel, partTimeCount, 
             partTimeCost, storeCount, storeCost, lastSaveTime: Date.now() 
         };
-        localStorage.setItem("cheogajipTycoon_v5", JSON.stringify(data));
+        localStorage.setItem("cheogajipTycoon_v6", JSON.stringify(data));
     }
 
     function getBaseCPS() {
@@ -266,6 +269,7 @@
 
         const currentMenu = chickenMenuData[menuLevel];
         document.getElementById("chicken-img").src = currentMenu.img;
+        document.getElementById("menu-title-overlay").innerText = currentMenu.name;
         document.getElementById("click-btn").innerText = `🍗 ${currentMenu.name} 조리 (+${(currentMenu.power * feverMultiplier).toLocaleString()}원)`;
 
         const menuBtn = document.getElementById("menu-btn");
@@ -300,7 +304,7 @@
 
     function resetGame() {
         if (confirm("정말로 모든 진행 상황을 초기화하시겠습니까?")) {
-            localStorage.removeItem("cheogajipTycoon_v5");
+            localStorage.removeItem("cheogajipTycoon_v6");
             location.reload();
         }
     }
