@@ -1,648 +1,357 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>처갓집 치킨 타이쿤</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background: #e9ecef; 
-            min-height: 100vh; 
-            min-height: 100dvh; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            padding: 12px;
-        }
-        
-        /* 기본 컨테이너 (모바일 및 PC 공통 기본값) */
-        .app-container { 
-            width: 100%; 
-            max-width: 420px; 
-            background: white; 
-            display: flex; 
-            flex-direction: column; 
-            padding: 10px; 
-            gap: 6px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-            border-radius: 12px;
-            position: relative;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>치킨 타이쿤</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    body { background-color: #f4f4f5; display: flex; justify-content: center; padding: 20px; }
+    .container { width: 100%; max-width: 500px; background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: relative; }
+    
+    /* 헤더 및 자산 정보 */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .badge { background: #e05600; color: white; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
+    .asset-box { background: #fff8f0; border: 1px solid #ffe3c2; padding: 16px; border-radius: 12px; text-align: center; margin-bottom: 12px; }
+    .asset-title { font-size: 13px; color: #666; margin-bottom: 4px; }
+    .asset-amount { font-size: 24px; font-weight: 800; color: #d93800; margin-bottom: 8px; }
+    .asset-stats { font-size: 12px; color: #e67e22; display: flex; justify-content: space-around; font-weight: 600; }
+    
+    /* 위생 상태 & 콤보 게이지 */
+    .status-panel { background: #fafafa; border: 1px solid #eee; border-radius: 10px; padding: 10px; margin-bottom: 12px; font-size: 13px; }
+    .status-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .status-bar-bg { width: 60%; height: 10px; background: #e0e0e0; border-radius: 5px; overflow: hidden; }
+    .status-bar-fill { height: 100%; width: 100%; background: #2ecc71; transition: width 0.3s, background-color 0.3s; }
+    
+    /* 이미지 & 메인 클릭 */
+    .image-container { position: relative; width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
+    .image-container img { width: 100%; height: 180px; object-fit: cover; display: block; }
+    .image-label { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.6); color: white; text-align: center; padding: 6px; font-weight: bold; font-size: 14px; }
+    
+    button { width: 100%; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: transform 0.05s, opacity 0.2s; }
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* PC / 대형 화면 최적화 (너비 600px 이상) */
-        @media (min-width: 600px) {
-            body { padding: 20px; }
-            .app-container {
-                max-width: 480px;
-                padding: 16px;
-                gap: 10px;
-                border: 1px solid #dee2e6;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-            }
-            .chicken-box { height: 120px !important; }
-            .btn-click { font-size: 14px !important; padding: 12px !important; }
-            .btn { font-size: 11px !important; padding: 8px !important; }
-            .money-val { font-size: 20px !important; }
-            .money-title { font-size: 11px !important; }
-            .section-title { font-size: 11px !important; }
-        }
-        
-        /* 상단 바 */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; }
-        .store-badge { background: #d9480e; color: white; padding: 3px 8px; border-radius: 12px; font-weight: bold; font-size: 11px; }
-        .header-btns { display: flex; gap: 4px; }
-        .btn-sm { padding: 3px 8px; font-size: 11px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; color: white; }
-        .btn-ledger { background: #339af0; }
-        .btn-book { background: #20c997; }
+    .btn-cook { background: #ff8c00; color: white; padding: 16px; font-size: 18px; margin-bottom: 16px; box-shadow: 0 4px 10px rgba(255,140,0,0.3); }
+    .btn-cook.fever { background: #e74c3c; animation: pulse 0.5s infinite alternate; }
+    @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.02); } }
 
-        /* 자산 정보 */
-        .money-card { background: #fff4e6; padding: 6px; border-radius: 8px; border: 1px solid #ffe8cc; text-align: center; }
-        .money-title { font-size: 10px; color: #868e96; }
-        .money-val { font-size: 16px; font-weight: 800; color: #d9480e; line-height: 1.1; }
-        .sub-stats { font-size: 10px; color: #f59f00; display: flex; justify-content: space-around; font-weight: 600; margin-top: 2px; }
+    /* 섹션 공통 */
+    .section-title { font-size: 14px; font-weight: bold; color: #333; margin: 16px 0 8px 0; border-left: 4px solid #ff8c00; padding-left: 8px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .btn-action { background: #f0f0f0; color: #333; padding: 12px; font-size: 13px; text-align: center; border: 1px solid #ddd; }
+    .btn-primary { background: #10ac84; color: white; border: none; }
+    
+    /* 돌발 이벤트 오버레이/팝업 */
+    .event-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); border-radius: 16px; z-index: 100; justify-content: center; align-items: center; flex-direction: column; color: white; padding: 20px; text-align: center; }
+    .event-card { background: white; color: #333; border-radius: 12px; padding: 20px; width: 85%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    .event-card h3 { color: #e74c3c; margin-bottom: 10px; }
+    .event-card p { font-size: 14px; margin-bottom: 16px; color: #666; }
+    .btn-event { background: #e74c3c; color: white; padding: 12px; font-size: 15px; }
 
-        /* 이벤트 배너 & 버튼 */
-        .banner { display: none; padding: 4px; font-weight: bold; font-size: 10px; text-align: center; border-radius: 4px; }
-        .fever-banner { background: #e03131; color: white; }
-        .penalty-banner { background: #495057; color: #ffc9c9; }
-        .btn-event { display: none; padding: 6px; font-size: 11px; font-weight: bold; color: white; border: none; border-radius: 4px; cursor: pointer; animation: pulse 0.8s infinite alternate; }
-        .btn-fever { background: #f03e3e; }
-        .btn-truck { background: #d9480e; }
-        @keyframes pulse { from { opacity: 0.8; transform: scale(0.99); } to { opacity: 1; transform: scale(1.01); } }
-
-        /* 날짜 */
-        .day-info { font-size: 10px; color: #495057; font-weight: bold; text-align: left; }
-
-        /* 치킨 이미지 영역 */
-        .chicken-box { width: 100%; height: 75px; border-radius: 8px; background: #e9ecef; overflow: hidden; position: relative; border: 1px solid #dee2e6; flex-shrink: 0; }
-        .chicken-img { width: 100%; height: 100%; object-fit: cover; }
-        .menu-title-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.65); color: white; padding: 2px; font-size: 10px; font-weight: bold; text-align: center; }
-
-        /* 섹션 타이틀 */
-        .section-title { font-size: 10px; color: #495057; margin-top: 2px; font-weight: bold; border-left: 3px solid #ff922b; padding-left: 5px; text-align: left; }
-
-        /* 버튼 기본 스타일 */
-        .btn { font-size: 10px; padding: 7px; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; text-align: center; transition: background 0.2s, transform 0.05s; }
-        .btn:active { transform: scale(0.98); }
-        .btn:disabled { background: #ced4da !important; color: #868e96; cursor: not-allowed; transform: none; }
-        .btn-click { background: #ff922b; font-size: 13px; padding: 9px; box-shadow: 0 3px 6px rgba(255,146,43,0.3); }
-        .btn-menu { background: #4c6ef5; }
-        .btn-upgrade { background: #20c997; }
-        .btn-side { background: #845ef7; }
-        .btn-minigame { background: #12b886; }
-        .btn-store { background: #fcc419; color: #212529; }
-        .btn-reset { background: #adb5bd; font-size: 9px; padding: 4px; margin-top: 4px; }
-
-        /* 2열 배치 */
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-
-        /* Floating 클릭 효과 */
-        .float-text { position: absolute; font-weight: bold; font-size: 13px; color: #d9480e; pointer-events: none; animation: floatUp 0.6s ease-out forwards; z-index: 50; }
-        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
-
-        /* 모달 */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; }
-        .modal-content { background: white; padding: 14px; border-radius: 10px; width: 90%; max-width: 340px; max-height: 75vh; overflow-y: auto; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f3f5; padding-bottom: 6px; margin-bottom: 8px; }
-        .close-btn { cursor: pointer; font-weight: bold; font-size: 16px; color: #868e96; }
-        .ledger-item { padding: 5px 0; border-bottom: 1px dashed #e9ecef; font-size: 11px; display: flex; justify-content: space-between; }
-        .book-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
-        .book-card { border: 1px solid #dee2e6; border-radius: 6px; padding: 6px; text-align: center; font-size: 10px; background: #f8f9fa; }
-        .book-card.locked { opacity: 0.4; filter: grayscale(100%); }
-
-        .flyer-target { position: absolute; width: 38px; height: 38px; background: #ff922b; color: white; font-weight: bold; font-size: 9px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.2); z-index: 60; }
-    </style>
+    /* Floating VIP 버튼 */
+    .vip-btn { display: none; position: absolute; top: 220px; right: 20px; background: #f1c40f; color: #333; padding: 10px 14px; border-radius: 30px; font-size: 12px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.2); animation: bounce 1s infinite alternate; z-index: 50; }
+    @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-8px); } }
+  </style>
 </head>
 <body>
 
-<div class="app-container" id="main-card">
-    <div class="top-bar">
-        <span id="store-badge" class="store-badge">🍗 1개 지점 운영 중</span>
-        <div class="header-btns">
-            <button class="btn-sm btn-ledger" onclick="openLedger()">📊 장부</button>
-            <button class="btn-sm btn-book" onclick="openBook()">📖 도감</button>
-        </div>
+<div class="container">
+  <!-- 돌발 이벤트 팝업 (기름 교체) -->
+  <div id="oilEventOverlay" class="event-overlay">
+    <div class="event-card">
+      <h3>⚠️ 긴급: 기름 오염도 경고!</h3>
+      <p>기름을 교체하지 않아 치킨이 타고 있습니다.<br><b>(초당 수익 50% 감소 중)</b></p>
+      <button id="btnCleanOil" class="btn-event">기름 정화하기 (0/5)</button>
     </div>
-    
-    <div class="money-card">
-        <div class="money-title">총 자산</div>
-        <div class="money-val"><span id="money-text">0</span>원</div>
-        <div class="sub-stats">
-            <span>오늘 매출: <span id="daily-money-text">0</span>원</span>
-            <span>초당: <span id="cps-text">0</span>원</span>
-        </div>
+  </div>
+
+  <!-- VIP 손님 버튼 -->
+  <button id="vipBtn" class="vip-btn" onclick="claimVipReward()">👑 VIP 미식가 방문! (터치)</button>
+
+  <!-- 상단 바 -->
+  <div class="top-bar">
+    <span class="badge" id="branchBadge">1개 지점 운영 중</span>
+  </div>
+
+  <!-- 자산 현황 -->
+  <div class="asset-box">
+    <div class="asset-title">총 자산</div>
+    <div class="asset-amount" id="txtMoney">0원</div>
+    <div class="asset-stats">
+      <span>오늘 매출: <span id="txtTodayRevenue">0</span>원</span>
+      <span>초당: <span id="txtCps">0</span>원</span>
     </div>
+  </div>
 
-    <div id="fever-banner" class="banner fever-banner">🔥 대형 유튜버 방문! 수익 5배! (<span id="fever-time">10</span>s)</div>
-    <div id="penalty-banner" class="banner penalty-banner">⚠️ 고객 클레임! 매출 30% 감소 (<span id="penalty-time">15</span>s)</div>
-
-    <button id="fever-btn" class="btn-event btn-fever" onclick="activateFever()">🎥 유튜버 매장 방문! (클릭하여 시작)</button>
-    <button id="truck-btn" class="btn-event btn-truck" onclick="activateTruck()">🚚 푸드트럭 챌린지! (클릭하여 매출 폭발)</button>
-
-    <div class="day-info" id="day-text">📅 2026년 8월 16일 (남은시간: 1800s)</div>
-
-    <div class="chicken-box">
-        <img id="chicken-img" class="chicken-img" src="./fride.jpg" alt="치킨 이미지">
-        <div id="menu-title-overlay" class="menu-title-overlay">후라이드치킨</div>
+  <!-- 위생 & 피크타임 상태창 -->
+  <div class="status-panel">
+    <div class="status-row">
+      <span>✨ 위생 상태 (<span id="txtHygiene">100</span>%)</span>
+      <div class="status-bar-bg"><div id="barHygiene" class="status-bar-fill"></div></div>
     </div>
-
-    <!-- 버튼 영역 -->
-    <button id="click-btn" class="btn btn-click" onclick="makeChicken(event)">🍗 치킨 조리 (+100원)</button>
-    
-    <div class="section-title">신메뉴 개발</div>
-    <button id="menu-btn" class="btn btn-menu" onclick="upgradeMenu()">📜 신메뉴 개발</button>
-
-    <div class="section-title">자동 수익 & 사이드</div>
-    <div class="btn-grid">
-        <button id="hire-btn" class="btn btn-upgrade" onclick="hirePartTime()">👨‍🍳 알바 고용</button>
-        <button id="side-btn" class="btn btn-side" onclick="buySide()">🥤 사이드 추가</button>
+    <div class="status-row">
+      <span>🔥 피크타임 콤보 (<span id="txtCombo">0</span>)</span>
+      <div class="status-bar-bg"><div id="barCombo" class="status-bar-fill" style="width:0%; background:#ff8c00;"></div></div>
     </div>
+  </div>
 
-    <div class="section-title">홍보 & 가맹점 사업</div>
-    <div class="btn-grid">
-        <button id="minigame-btn" class="btn btn-minigame" onclick="startFlyerMinigame()">📣 전단지 홍보</button>
-        <button id="store-btn" class="btn btn-store" onclick="openNewStore()">🚀 가맹점 개업</button>
-    </div>
+  <!-- 이미지 섹션 -->
+  <div class="image-container">
+    <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=600&q=80" alt="치킨">
+    <div class="image-label" id="txtCurrentMenu">후라이드 치킨</div>
+  </div>
 
-    <button class="btn btn-reset" onclick="resetGame()">데이터 초기화</button>
-</div>
+  <!-- 메인 클릭 조리 버튼 -->
+  <button id="btnCook" class="btn-cook" onclick="cookChicken()">
+    🍗 치킨 조리 (+<span id="txtCpc">250,000</span>원)
+  </button>
 
-<!-- 장부 모달 -->
-<div id="ledger-modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h4 style="margin:0; font-size: 12px;">📊 매출 장부 기록</h4>
-            <span class="close-btn" onclick="closeModal('ledger-modal')">&times;</span>
-        </div>
-        <div id="ledger-list"></div>
-    </div>
-</div>
+  <!-- 관리 기능 -->
+  <div class="section-title">매장 관리 & 유지</div>
+  <div class="grid-2">
+    <button class="btn-action" onclick="cleanStore()">🧹 청소 & 위생 점검 (+20)</button>
+    <button id="btnAutoCook" class="btn-action" onclick="buyPartTime()">🧑‍🍳 알바 고용 (<span id="txtPartTimeCost">100,000</span>원)</button>
+  </div>
 
-<!-- 도감 모달 -->
-<div id="book-modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h4 style="margin:0; font-size: 12px;">📖 메뉴 컬렉션 도감</h4>
-            <span class="close-btn" onclick="closeModal('book-modal')">&times;</span>
-        </div>
-        <div class="book-grid" id="book-grid"></div>
-    </div>
+  <!-- 홍보 & 가맹점 사업 -->
+  <div class="section-title">홍보 & 가맹점 사업</div>
+  <div class="grid-2">
+    <button class="btn-action btn-primary" onclick="promote()">📢 전단지 홍보</button>
+    <button id="btnNewBranch" class="btn-action" onclick="openBranch()">🚀 다음 호점 개업 (<span id="txtBranchCost">1,000,000</span>원)</button>
+  </div>
+
+  <!-- 데이터 관리 -->
+  <div style="margin-top:20px;">
+    <button class="btn-action" style="background:#eee; color:#666;" onclick="resetData()">데이터 초기화</button>
+  </div>
 </div>
 
 <script>
-    const DAY_DURATION_SEC = 1800;
+  // --- 게임 데이터 상태 ---
+  let state = {
+    money: 0,
+    todayRevenue: 0,
+    baseCps: 0,
+    branches: 1,
+    partTimeCount: 0,
+    partTimeCost: 100000,
+    branchCost: 1000000,
+    
+    // 신규 메커니즘 상태
+    hygiene: 100,
+    combo: 0,
+    oilClickCount: 0,
+    isOilEventActive: false,
+    vipActive: false
+  };
 
-    const chickenMenuData = [
-        { name: "후라이드치킨", img: "./fride.jpg", power: 100, cost: 0 },
-        { name: "훈제치킨", img: "./bbq.jpg", power: 200, cost: 1000 },
-        { name: "반반치킨", img: "./half.jpg", power: 450, cost: 3500 },
-        { name: "허니올리고당야채양념치킨", img: "./flavor.jpg", power: 800, cost: 10000 },
-        { name: "닭강정", img: "./point.jpg", power: 1400, cost: 25000 },
-        { name: "와락간장치킨", img: "./soy.jpg", power: 2300, cost: 60000 },
-        { name: "슈프림양념치킨", img: "./suprem.jpg", power: 3800, cost: 150000 },
-        { name: "치즈슈프림양념치킨", img: "./cheese.jpg", power: 6000, cost: 350000 },
-        { name: "핫슈프림양념치킨", img: "./hot.jpg", power: 9500, cost: 800000 },
-        { name: "슈프림골드양념치킨", img: "./gold.jpg", power: 15000, cost: 1800000 },
-        { name: "블랙라벨양념치킨", img: "./black.jpg", power: 24000, cost: 4000000 },
-        { name: "매운불양념치킨", img: "./spicy.jpg", power: 38000, cost: 9000000 },
-        { name: "100%청양산고추치킨", img: "./spicy100.jpg", power: 60000, cost: 20000000 },
-        { name: "K마라양념치킨", img: "./k.jpg", power: 95000, cost: 45000000 },
-        { name: "미트칠리양념치킨", img: "./meat.jpg", power: 150000, cost: 100000000 },
-        { name: "세트치킨", img: "./set.jpg", power: 250000, cost: 250000000 }
-    ];
+  const BASE_CPC = 250000;
+  let comboTimer = null;
+  let vipTimer = null;
 
-    const sideUpgradeData = [
-        { name: "치킨무", cps: 50, cost: 800 },
-        { name: "치킨치즈볼", cps: 150, cost: 2500 },
-        { name: "치즈크런치 감자튀김", cps: 350, cost: 7000 },
-        { name: "어포튀김", cps: 800, cost: 18000 },
-        { name: "팝만두", cps: 1800, cost: 45000 },
-        { name: "꼬치없는떡꼬치", cps: 3800, cost: 100000 },
-        { name: "황도", cps: 8000, cost: 250000 },
-        { name: "번데기탕", cps: 16000, cost: 600000 },
-        { name: "스팸계란구이", cps: 32000, cost: 1400000 },
-        { name: "비빔만두", cps: 60000, cost: 3000000 },
-        { name: "국물떡볶이", cps: 120000, cost: 7000000 },
-        { name: "닭발튀김", cps: 230000, cost: 15000000 },
-        { name: "무뼈닭발", cps: 450000, cost: 35000000 },
-        { name: "김치우동", cps: 900000, cost: 80000000 },
-        { name: "메밀소바", cps: 1800000, cost: 180000000 },
-        { name: "먹태", cps: 3500000, cost: 400000000 },
-        { name: "골뱅이무침", cps: 7000000, cost: 1000000000 }
-    ];
+  // --- Core Game Loop ---
+  setInterval(() => {
+    // 1. 위생 점수 차감 (초당 0.2점 감소)
+    state.hygiene = Math.max(0, state.hygiene - 0.2);
 
-    let money = 0;
-    let dailyMoney = 0;
-    let menuLevel = 0;
-    let sideLevel = 0;
-    let partTimeCount = 0;
-    let partTimeCost = 1000;
-    let storeCount = 1;
-    let storeCost = 500000;
+    // 2. 위생 및 이벤트에 따른 초당 수익(CPS) 계산
+    let currentCps = calculateEffectiveCps();
 
-    const today = new Date();
-    let currentYear = today.getFullYear();
-    let currentMonth = today.getMonth() + 1;
-    let currentDay = today.getDate();
+    // 3. 자산 증대
+    state.money += currentCps;
+    state.todayRevenue += currentCps;
 
-    let dayTimer = DAY_DURATION_SEC;
-    let salesLedger = [];
-
-    let isFever = false;
-    let feverTimeLeft = 0;
-    let feverMultiplier = 1;
-    let isPenalty = false;
-    let penaltyTimeLeft = 0;
-    let penaltyMultiplier = 1;
-
-    let isMinigameActive = false;
-
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playSound(type) {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        if (type === 'click') {
-            osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.08);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.08);
-        } else if (type === 'upgrade') {
-            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.2);
-            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.2);
-        } else if (type === 'event') {
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-            osc.frequency.linearRampToValueAtTime(600, audioCtx.currentTime + 0.3);
-            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-        }
+    // 4. 돌발 이벤트 랜덤 발동 체크 (약 1/120 확률, 평균 2분 주기)
+    if (!state.isOilEventActive && Math.random() < 0.008) {
+      triggerOilEvent();
+    }
+    if (!state.vipActive && Math.random() < 0.01) {
+      triggerVipEvent();
     }
 
-    function loadGame() {
-        const savedData = localStorage.getItem("cheogajipTycoon_v14");
-        if (savedData) {
-            const data = JSON.parse(savedData);
-            money = data.money || 0;
-            dailyMoney = data.dailyMoney || 0;
-            menuLevel = data.menuLevel || 0;
-            sideLevel = data.sideLevel || 0;
-            partTimeCount = data.partTimeCount || 0;
-            partTimeCost = data.partTimeCost || 1000;
-            storeCount = data.storeCount || 1;
-            storeCost = data.storeCost || 500000;
-            currentYear = data.currentYear || currentYear;
-            currentMonth = data.currentMonth || currentMonth;
-            currentDay = data.currentDay || currentDay;
-            dayTimer = data.dayTimer || DAY_DURATION_SEC;
-            salesLedger = data.salesLedger || [];
-        }
+    updateUI();
+  }, 1000);
+
+  // --- 계산 로직 ---
+  function calculateEffectiveCps() {
+    let cps = state.baseCps;
+
+    // 위생 점수 패널티
+    if (state.hygiene < 50) cps *= 0.5;
+    else if (state.hygiene < 80) cps *= 0.8;
+
+    // 기름 오염 패널티
+    if (state.isOilEventActive) cps *= 0.5;
+
+    // 콤보/피크타임 버프
+    if (state.combo >= 50) cps *= 2.0;
+    else if (state.combo >= 30) cps *= 1.5;
+    else if (state.combo >= 10) cps *= 1.2;
+
+    return Math.floor(cps);
+  }
+
+  function getCpcValue() {
+    // 1. CPS 연동 클릭 스케일링: Max(기본 CPC, 실효 CPS * 2%)
+    let effectiveCps = calculateEffectiveCps();
+    let scaledCpc = Math.max(BASE_CPC, Math.floor(effectiveCps * 0.02));
+    
+    // 콤보 버프 추가 적용
+    if (state.combo >= 50) scaledCpc *= 1.5;
+
+    return scaledCpc;
+  }
+
+  // --- 수동 인터랙션 (클릭) ---
+  function cookChicken() {
+    let cpc = getCpcValue();
+    state.money += cpc;
+    state.todayRevenue += cpc;
+
+    // 콤보 수치 증가
+    state.combo = Math.min(60, state.combo + 1);
+    
+    // 콤보 감소 타이머 리셋 (1.5초 후 감소 시작)
+    clearTimeout(comboTimer);
+    comboTimer = setTimeout(decayCombo, 1500);
+
+    updateUI();
+  }
+
+  function decayCombo() {
+    if (state.combo > 0) {
+      state.combo = Math.max(0, state.combo - 5);
+      updateUI();
+      comboTimer = setTimeout(decayCombo, 200);
+    }
+  }
+
+  function cleanStore() {
+    state.hygiene = Math.min(100, state.hygiene + 20);
+    updateUI();
+  }
+
+  // --- 알바 및 지점 확장 ---
+  function buyPartTime() {
+    if (state.money >= state.partTimeCost) {
+      state.money -= state.partTimeCost;
+      state.partTimeCount++;
+      state.baseCps += 50000;
+      state.partTimeCost = Math.floor(state.partTimeCost * 1.5);
+      updateUI();
+    }
+  }
+
+  function openBranch() {
+    if (state.money >= state.branchCost) {
+      state.money -= state.branchCost;
+      state.branches++;
+      state.baseCps += 1000000;
+      state.branchCost = Math.floor(state.branchCost * 2.2);
+      updateUI();
+    }
+  }
+
+  function promote() {
+    // 일회성 버프 또는 수입 액션
+    let bonus = Math.floor(BASE_CPC * 2);
+    state.money += bonus;
+    state.todayRevenue += bonus;
+    updateUI();
+  }
+
+  // --- 돌발 이벤트 처리 ---
+  function triggerOilEvent() {
+    state.isOilEventActive = true;
+    state.oilClickCount = 0;
+    document.getElementById('oilEventOverlay').style.display = 'flex';
+    document.getElementById('btnCleanOil').innerText = `기름 정화하기 (${state.oilClickCount}/5)`;
+    
+    document.getElementById('btnCleanOil').onclick = function() {
+      state.oilClickCount++;
+      this.innerText = `기름 정화하기 (${state.oilClickCount}/5)`;
+      if (state.oilClickCount >= 5) {
+        state.isOilEventActive = false;
+        document.getElementById('oilEventOverlay').style.display = 'none';
         updateUI();
+      }
+    };
+  }
+
+  function triggerVipEvent() {
+    state.vipActive = true;
+    const vipBtn = document.getElementById('vipBtn');
+    vipBtn.style.display = 'block';
+
+    clearTimeout(vipTimer);
+    vipTimer = setTimeout(() => {
+      vipBtn.style.display = 'none';
+      state.vipActive = false;
+    }, 10000); // 10초 내 안누르면 소멸
+  }
+
+  function claimVipReward() {
+    if (!state.vipActive) return;
+    
+    let reward = Math.max(1000000, Math.floor(state.money * 0.1));
+    state.money += reward;
+    state.todayRevenue += reward;
+    
+    document.getElementById('vipBtn').style.display = 'none';
+    state.vipActive = false;
+    alert(`👑 VIP 미식가 방문 완료!\n보상으로 ${reward.toLocaleString()}원을 획득했습니다!`);
+    updateUI();
+  }
+
+  // --- UI 업데이트 ---
+  function updateUI() {
+    let effectiveCps = calculateEffectiveCps();
+    let currentCpc = getCpcValue();
+
+    document.getElementById('txtMoney').innerText = state.money.toLocaleString() + '원';
+    document.getElementById('txtTodayRevenue').innerText = state.todayRevenue.toLocaleString();
+    document.getElementById('txtCps').innerText = effectiveCps.toLocaleString();
+    document.getElementById('txtCpc').innerText = currentCpc.toLocaleString();
+    
+    document.getElementById('branchBadge').innerText = `${state.branches}개 지점 운영 중`;
+    document.getElementById('txtPartTimeCost').innerText = state.partTimeCost.toLocaleString();
+    document.getElementById('txtBranchCost').innerText = state.branchCost.toLocaleString();
+
+    // 알바/지점 버튼 활성화 여부
+    document.getElementById('btnAutoCook').disabled = state.money < state.partTimeCost;
+    document.getElementById('btnNewBranch').disabled = state.money < state.branchCost;
+
+    // 위생 바 업데이트
+    document.getElementById('txtHygiene').innerText = Math.floor(state.hygiene);
+    const barHygiene = document.getElementById('barHygiene');
+    barHygiene.style.width = state.hygiene + '%';
+    barHygiene.style.backgroundColor = state.hygiene < 50 ? '#e74c3c' : (state.hygiene < 80 ? '#f1c40f' : '#2ecc71');
+
+    // 콤보 바 업데이트
+    document.getElementById('txtCombo').innerText = state.combo;
+    const barCombo = document.getElementById('barCombo');
+    barCombo.style.width = (state.combo / 60 * 100) + '%';
+    
+    const btnCook = document.getElementById('btnCook');
+    if (state.combo >= 50) {
+      btnCook.classList.add('fever');
+      btnCook.innerText = `🔥 피크타임 연사 중! (+${currentCpc.toLocaleString()}원)`;
+    } else {
+      btnCook.classList.remove('fever');
+      btnCook.innerText = `🍗 치킨 조리 (+${currentCpc.toLocaleString()}원)`;
     }
+  }
 
-    function saveGame() {
-        const data = { 
-            money, dailyMoney, menuLevel, sideLevel, partTimeCount, 
-            partTimeCost, storeCount, storeCost, 
-            currentYear, currentMonth, currentDay, dayTimer, salesLedger
-        };
-        localStorage.setItem("cheogajipTycoon_v14", JSON.stringify(data));
+  function resetData() {
+    if (confirm("모든 데이터를 초기화하시겠습니까?")) {
+      state = { money: 0, todayRevenue: 0, baseCps: 0, branches: 1, partTimeCount: 0, partTimeCost: 100000, branchCost: 1000000, hygiene: 100, combo: 0, oilClickCount: 0, isOilEventActive: false, vipActive: false };
+      updateUI();
     }
+  }
 
-    function getBaseCPS() {
-        let singleStoreCps = (partTimeCount * 150);
-        for (let i = 0; i < sideLevel; i++) {
-            singleStoreCps += sideUpgradeData[i].cps;
-        }
-        return Math.floor(singleStoreCps * storeCount * feverMultiplier * penaltyMultiplier);
-    }
-
-    function spawnFloatText(e, text) {
-        const card = document.getElementById("main-card");
-        const floatEl = document.createElement("div");
-        floatEl.className = "float-text";
-        floatEl.innerText = text;
-
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX ? (e.clientX - rect.left - 20) : (rect.width / 2);
-        const y = e.clientY ? (e.clientY - rect.top - 20) : (rect.height / 2);
-
-        floatEl.style.left = `${x}px`;
-        floatEl.style.top = `${y}px`;
-
-        card.appendChild(floatEl);
-        setTimeout(() => floatEl.remove(), 600);
-    }
-
-    function makeChicken(e) {
-        const currentMenu = chickenMenuData[menuLevel];
-        const earned = Math.floor(currentMenu.power * feverMultiplier * penaltyMultiplier);
-        money += earned;
-        dailyMoney += earned;
-        playSound('click');
-        spawnFloatText(e, `+${earned.toLocaleString()}원!`);
-        updateUI();
-        saveGame();
-    }
-
-    function hirePartTime() {
-        if (money >= partTimeCost) {
-            money -= partTimeCost;
-            partTimeCount++;
-            partTimeCost = Math.floor(partTimeCost * 1.4);
-            playSound('upgrade');
-            updateUI();
-            saveGame();
-        }
-    }
-
-    function upgradeMenu() {
-        if (menuLevel < chickenMenuData.length - 1) {
-            const nextMenu = chickenMenuData[menuLevel + 1];
-            if (money >= nextMenu.cost) {
-                money -= nextMenu.cost;
-                menuLevel++;
-                playSound('upgrade');
-                updateUI();
-                saveGame();
-            }
-        }
-    }
-
-    function buySide() {
-        if (sideLevel < sideUpgradeData.length) {
-            const nextSide = sideUpgradeData[sideLevel];
-            if (money >= nextSide.cost) {
-                money -= nextSide.cost;
-                sideLevel++;
-                playSound('upgrade');
-                updateUI();
-                saveGame();
-            }
-        }
-    }
-
-    function openNewStore() {
-        if (money >= storeCost) {
-            money -= storeCost;
-            storeCount++;
-            storeCost = Math.floor(storeCost * 2.8);
-            playSound('upgrade');
-            alert(`🎉 축하합니다! ${storeCount}호 가맹점을 개업했습니다!`);
-            updateUI();
-            saveGame();
-        }
-    }
-
-    function startFlyerMinigame() {
-        if (isMinigameActive) return;
-        isMinigameActive = true;
-        document.getElementById("minigame-btn").disabled = true;
-
-        let timeLeft = 10;
-        const card = document.getElementById("main-card");
-
-        const gameInterval = setInterval(() => {
-            if (timeLeft <= 0) {
-                clearInterval(gameInterval);
-                isMinigameActive = false;
-                document.getElementById("minigame-btn").disabled = false;
-                document.getElementById("minigame-btn").innerText = "📣 전단지 홍보";
-                return;
-            }
-            
-            document.getElementById("minigame-btn").innerText = `📣 홍보 중 (${timeLeft}s)`;
-            timeLeft--;
-
-            const target = document.createElement("div");
-            target.className = "flyer-target";
-            target.innerText = "전단지";
-            target.style.left = `${Math.random() * (card.clientWidth - 50) + 10}px`;
-            target.style.top = `${Math.random() * (card.clientHeight - 200) + 100}px`;
-
-            target.onclick = (e) => {
-                const bonus = Math.floor(chickenMenuData[menuLevel].power * 5);
-                money += bonus;
-                dailyMoney += bonus;
-                playSound('click');
-                spawnFloatText(e, `+${bonus.toLocaleString()}원`);
-                target.remove();
-                updateUI();
-            };
-
-            card.appendChild(target);
-            setTimeout(() => { if (target.parentNode) target.remove(); }, 1200);
-
-        }, 1000);
-    }
-
-    setInterval(() => {
-        const rand = Math.random();
-
-        if (!isFever && rand < 0.15 && document.getElementById("fever-btn").style.display !== "block") {
-            const btn = document.getElementById("fever-btn");
-            btn.style.display = "block";
-            playSound('event');
-            setTimeout(() => { btn.style.display = "none"; }, 7000);
-        }
-
-        if (rand > 0.97 && document.getElementById("truck-btn").style.display !== "block") {
-            const truckBtn = document.getElementById("truck-btn");
-            truckBtn.style.display = "block";
-            playSound('event');
-            setTimeout(() => { truckBtn.style.display = "none"; }, 7000);
-        }
-
-        if (!isPenalty && rand > 0.85 && rand <= 0.93) {
-            triggerPenaltyEvent();
-        }
-    }, 20000);
-
-    function activateFever() {
-        document.getElementById("fever-btn").style.display = "none";
-        isFever = true;
-        feverMultiplier = 5;
-        feverTimeLeft = 10;
-        document.getElementById("fever-banner").style.display = "block";
-
-        const feverInterval = setInterval(() => {
-            feverTimeLeft--;
-            document.getElementById("fever-time").innerText = feverTimeLeft;
-            if (feverTimeLeft <= 0) {
-                clearInterval(feverInterval);
-                isFever = false;
-                feverMultiplier = 1;
-                document.getElementById("fever-banner").style.display = "none";
-            }
-        }, 1000);
-    }
-
-    function activateTruck() {
-        document.getElementById("truck-btn").style.display = "none";
-        const baseVal = Math.floor(Math.random() * (10000000 - 5000000 + 1)) + 5000000;
-        const truckSales = Math.floor(baseVal / 100) * 100;
-
-        money += truckSales;
-        dailyMoney += truckSales;
-        alert(`🚚 [푸드트럭 행사 성공!]\n총 +${truckSales.toLocaleString()}원 추가 매출 발생!`);
-        updateUI();
-        saveGame();
-    }
-
-    function triggerPenaltyEvent() {
-        isPenalty = true;
-        penaltyMultiplier = 0.7;
-        penaltyTimeLeft = 15;
-        
-        const refundAmount = Math.min(money, Math.floor(Math.random() * 50000 + 10000));
-        money -= refundAmount;
-
-        alert(`⚠️ [고객 클레임 발생!]\n${refundAmount.toLocaleString()}원 환불 처리 및 15초간 매출 30% 감소`);
-        document.getElementById("penalty-banner").style.display = "block";
-
-        const penaltyInterval = setInterval(() => {
-            penaltyTimeLeft--;
-            document.getElementById("penalty-time").innerText = penaltyTimeLeft;
-            if (penaltyTimeLeft <= 0) {
-                clearInterval(penaltyInterval);
-                isPenalty = false;
-                penaltyMultiplier = 1;
-                document.getElementById("penalty-banner").style.display = "none";
-            }
-        }, 1000);
-    }
-
-    setInterval(() => {
-        const currentCps = getBaseCPS();
-        if (currentCps > 0) {
-            money += currentCps;
-            dailyMoney += currentCps;
-        }
-
-        dayTimer--;
-        if (dayTimer <= 0) {
-            advanceDay();
-        }
-
-        updateUI();
-        saveGame();
-    }, 1000);
-
-    function advanceDay() {
-        salesLedger.unshift({
-            date: `${currentYear}년 ${currentMonth}월 ${currentDay}일`,
-            sales: dailyMoney
-        });
-
-        if (salesLedger.length > 100) salesLedger.pop();
-
-        dailyMoney = 0;
-        dayTimer = DAY_DURATION_SEC;
-
-        let nextDate = new Date(currentYear, currentMonth - 1, currentDay + 1);
-        currentYear = nextDate.getFullYear();
-        currentMonth = nextDate.getMonth() + 1;
-        currentDay = nextDate.getDate();
-
-        alert(`🌅 새로운 날이 밝았습니다! (${currentYear}년 ${currentMonth}월 ${currentDay}일)`);
-    }
-
-    function updateUI() {
-        document.getElementById("money-text").innerText = money.toLocaleString();
-        document.getElementById("daily-money-text").innerText = dailyMoney.toLocaleString();
-        document.getElementById("cps-text").innerText = getBaseCPS().toLocaleString();
-        document.getElementById("store-badge").innerText = `🍗 ${storeCount}개 지점 운영 중`;
-        document.getElementById("day-text").innerText = `📅 ${currentYear}년 ${currentMonth}월 ${currentDay}일 (남은시간: ${dayTimer}s)`;
-
-        const currentMenu = chickenMenuData[menuLevel];
-        document.getElementById("chicken-img").src = currentMenu.img;
-        document.getElementById("menu-title-overlay").innerText = currentMenu.name;
-        
-        const clickEarn = Math.floor(currentMenu.power * feverMultiplier * penaltyMultiplier);
-        document.getElementById("click-btn").innerText = `🍗 ${currentMenu.name} 조리 (+${clickEarn.toLocaleString()}원)`;
-
-        const menuBtn = document.getElementById("menu-btn");
-        if (menuLevel < chickenMenuData.length - 1) {
-            const nextMenu = chickenMenuData[menuLevel + 1];
-            menuBtn.innerText = `📜 ${nextMenu.name} (${nextMenu.cost.toLocaleString()}원)`;
-            menuBtn.disabled = money < nextMenu.cost;
-        } else {
-            menuBtn.innerText = `✨ 모든 메뉴 개발 완료!`;
-            menuBtn.disabled = true;
-        }
-
-        const hireBtn = document.getElementById("hire-btn");
-        hireBtn.innerText = `👨‍🍳 알바 고용 (${partTimeCost.toLocaleString()}원 / ${partTimeCount}명)`;
-        hireBtn.disabled = money < partTimeCost;
-
-        const sideBtn = document.getElementById("side-btn");
-        if (sideLevel < sideUpgradeData.length) {
-            const nextSide = sideUpgradeData[sideLevel];
-            sideBtn.innerText = `🥤 ${nextSide.name} (${nextSide.cost.toLocaleString()}원)`;
-            sideBtn.disabled = money < nextSide.cost;
-        } else {
-            sideBtn.innerText = `✨ 사이드 풀업!`;
-            sideBtn.disabled = true;
-        }
-
-        const storeBtn = document.getElementById("store-btn");
-        storeBtn.innerText = `🚀 ${storeCount + 1}호점 개업 (${storeCost.toLocaleString()}원)`;
-        storeBtn.disabled = money < storeCost;
-    }
-
-    function openLedger() {
-        const ledgerList = document.getElementById("ledger-list");
-        if (salesLedger.length === 0) {
-            ledgerList.innerHTML = `<p style="color:#868e96; text-align:center; padding:10px;">기록된 매출 데이터가 없습니다.</p>`;
-        } else {
-            ledgerList.innerHTML = salesLedger.map(item => `
-                <div class="ledger-item">
-                    <span>${item.date}</span>
-                    <strong style="color:#d9480e;">${item.sales.toLocaleString()} 원</strong>
-                </div>
-            `).join('');
-        }
-        document.getElementById("ledger-modal").style.display = "flex";
-    }
-
-    function openBook() {
-        const bookGrid = document.getElementById("book-grid");
-        bookGrid.innerHTML = chickenMenuData.map((menu, idx) => `
-            <div class="book-card ${idx > menuLevel ? 'locked' : ''}">
-                <div style="font-size: 11px;">🍗</div>
-                <strong>${idx <= menuLevel ? menu.name : '????'}</strong>
-                <div style="color: #868e96; margin-top: 2px;">
-                    ${idx <= menuLevel ? '+' + menu.power.toLocaleString() + '원' : '미해금'}
-                </div>
-            </div>
-        `).join('');
-        document.getElementById("book-modal").style.display = "flex";
-    }
-
-    function closeModal(id) {
-        document.getElementById(id).style.display = "none";
-    }
-
-    function resetGame() {
-        if (confirm("모든 진행 상황을 초기화하시겠습니까?")) {
-            localStorage.removeItem("cheogajipTycoon_v14");
-            location.reload();
-        }
-    }
-
-    loadGame();
+  // 최초 UI 렌더링
+  updateUI();
 </script>
-
 </body>
 </html>
