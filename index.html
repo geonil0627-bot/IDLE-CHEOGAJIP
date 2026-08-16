@@ -9,92 +9,111 @@
         
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background: #f1f3f5; 
-            height: 100vh; 
-            height: 100dvh; 
+            background: #e9ecef; 
+            min-height: 100vh; 
+            min-height: 100dvh; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            overflow: hidden; 
+            padding: 12px;
         }
         
+        /* 기본 컨테이너 (모바일 및 PC 공통 기본값) */
         .app-container { 
             width: 100%; 
-            max-width: 430px; 
-            height: 100vh; 
-            height: 100dvh; 
+            max-width: 420px; 
             background: white; 
             display: flex; 
             flex-direction: column; 
-            padding: 8px; 
-            overflow-y: auto; 
-            gap: 4px;
+            padding: 10px; 
+            gap: 6px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            position: relative;
+        }
+
+        /* PC / 대형 화면 최적화 (너비 600px 이상) */
+        @media (min-width: 600px) {
+            body { padding: 20px; }
+            .app-container {
+                max-width: 480px;
+                padding: 16px;
+                gap: 10px;
+                border: 1px solid #dee2e6;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            }
+            .chicken-box { height: 120px !important; }
+            .btn-click { font-size: 14px !important; padding: 12px !important; }
+            .btn { font-size: 11px !important; padding: 8px !important; }
+            .money-val { font-size: 20px !important; }
+            .money-title { font-size: 11px !important; }
+            .section-title { font-size: 11px !important; }
         }
         
         /* 상단 바 */
         .top-bar { display: flex; justify-content: space-between; align-items: center; }
-        .store-badge { background: #d9480e; color: white; padding: 2px 6px; border-radius: 10px; font-weight: bold; font-size: 10px; }
+        .store-badge { background: #d9480e; color: white; padding: 3px 8px; border-radius: 12px; font-weight: bold; font-size: 11px; }
         .header-btns { display: flex; gap: 4px; }
-        .btn-sm { padding: 2px 6px; font-size: 10px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; color: white; }
+        .btn-sm { padding: 3px 8px; font-size: 11px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; color: white; }
         .btn-ledger { background: #339af0; }
         .btn-book { background: #20c997; }
 
         /* 자산 정보 */
-        .money-card { background: #fff4e6; padding: 4px; border-radius: 6px; border: 1px solid #ffe8cc; text-align: center; }
-        .money-title { font-size: 9px; color: #868e96; }
-        .money-val { font-size: 15px; font-weight: 800; color: #d9480e; line-height: 1.1; }
-        .sub-stats { font-size: 9px; color: #f59f00; display: flex; justify-content: space-around; font-weight: 600; margin-top: 1px; }
+        .money-card { background: #fff4e6; padding: 6px; border-radius: 8px; border: 1px solid #ffe8cc; text-align: center; }
+        .money-title { font-size: 10px; color: #868e96; }
+        .money-val { font-size: 16px; font-weight: 800; color: #d9480e; line-height: 1.1; }
+        .sub-stats { font-size: 10px; color: #f59f00; display: flex; justify-content: space-around; font-weight: 600; margin-top: 2px; }
 
         /* 이벤트 배너 & 버튼 */
-        .banner { display: none; padding: 3px; font-weight: bold; font-size: 9px; text-align: center; border-radius: 4px; }
+        .banner { display: none; padding: 4px; font-weight: bold; font-size: 10px; text-align: center; border-radius: 4px; }
         .fever-banner { background: #e03131; color: white; }
         .penalty-banner { background: #495057; color: #ffc9c9; }
-        .btn-event { display: none; padding: 4px; font-size: 10px; font-weight: bold; color: white; border: none; border-radius: 4px; cursor: pointer; animation: pulse 0.8s infinite alternate; }
+        .btn-event { display: none; padding: 6px; font-size: 11px; font-weight: bold; color: white; border: none; border-radius: 4px; cursor: pointer; animation: pulse 0.8s infinite alternate; }
         .btn-fever { background: #f03e3e; }
         .btn-truck { background: #d9480e; }
         @keyframes pulse { from { opacity: 0.8; transform: scale(0.99); } to { opacity: 1; transform: scale(1.01); } }
 
         /* 날짜 */
-        .day-info { font-size: 9px; color: #495057; font-weight: bold; text-align: left; }
+        .day-info { font-size: 10px; color: #495057; font-weight: bold; text-align: left; }
 
-        /* 치킨 이미지 높이 최적화 (60px) */
-        .chicken-box { width: 100%; height: 60px; border-radius: 6px; background: #e9ecef; overflow: hidden; position: relative; border: 1px solid #dee2e6; flex-shrink: 0; }
+        /* 치킨 이미지 영역 */
+        .chicken-box { width: 100%; height: 75px; border-radius: 8px; background: #e9ecef; overflow: hidden; position: relative; border: 1px solid #dee2e6; flex-shrink: 0; }
         .chicken-img { width: 100%; height: 100%; object-fit: cover; }
-        .menu-title-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; padding: 1px; font-size: 9px; font-weight: bold; text-align: center; }
+        .menu-title-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.65); color: white; padding: 2px; font-size: 10px; font-weight: bold; text-align: center; }
 
         /* 섹션 타이틀 */
-        .section-title { font-size: 9px; color: #495057; margin-top: 2px; font-weight: bold; border-left: 3px solid #ff922b; padding-left: 4px; text-align: left; }
+        .section-title { font-size: 10px; color: #495057; margin-top: 2px; font-weight: bold; border-left: 3px solid #ff922b; padding-left: 5px; text-align: left; }
 
-        /* 버튼 일괄 컴팩트 스타일 */
-        .btn { font-size: 10px; padding: 6px; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; text-align: center; }
-        .btn:disabled { background: #ced4da !important; color: #868e96; cursor: not-allowed; }
-        .btn-click { background: #ff922b; font-size: 12px; padding: 8px; box-shadow: 0 2px 4px rgba(255,146,43,0.3); }
-        .btn-click:active { transform: scale(0.98); }
+        /* 버튼 기본 스타일 */
+        .btn { font-size: 10px; padding: 7px; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; text-align: center; transition: background 0.2s, transform 0.05s; }
+        .btn:active { transform: scale(0.98); }
+        .btn:disabled { background: #ced4da !important; color: #868e96; cursor: not-allowed; transform: none; }
+        .btn-click { background: #ff922b; font-size: 13px; padding: 9px; box-shadow: 0 3px 6px rgba(255,146,43,0.3); }
         .btn-menu { background: #4c6ef5; }
         .btn-upgrade { background: #20c997; }
         .btn-side { background: #845ef7; }
         .btn-minigame { background: #12b886; }
         .btn-store { background: #fcc419; color: #212529; }
-        .btn-reset { background: #adb5bd; font-size: 8px; padding: 3px; margin-top: 2px; }
+        .btn-reset { background: #adb5bd; font-size: 9px; padding: 4px; margin-top: 4px; }
 
-        /* 2열 버튼 배치 */
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+        /* 2열 배치 */
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 
         /* Floating 클릭 효과 */
-        .float-text { position: absolute; font-weight: bold; font-size: 12px; color: #d9480e; pointer-events: none; animation: floatUp 0.6s ease-out forwards; z-index: 50; }
+        .float-text { position: absolute; font-weight: bold; font-size: 13px; color: #d9480e; pointer-events: none; animation: floatUp 0.6s ease-out forwards; z-index: 50; }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
 
         /* 모달 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; }
-        .modal-content { background: white; padding: 12px; border-radius: 8px; width: 85%; max-width: 320px; max-height: 70vh; overflow-y: auto; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f3f5; padding-bottom: 4px; margin-bottom: 6px; }
-        .close-btn { cursor: pointer; font-weight: bold; font-size: 14px; color: #868e96; }
-        .ledger-item { padding: 4px 0; border-bottom: 1px dashed #e9ecef; font-size: 10px; display: flex; justify-content: space-between; }
-        .book-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; }
-        .book-card { border: 1px solid #dee2e6; border-radius: 4px; padding: 4px; text-align: center; font-size: 9px; background: #f8f9fa; }
+        .modal-content { background: white; padding: 14px; border-radius: 10px; width: 90%; max-width: 340px; max-height: 75vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f3f5; padding-bottom: 6px; margin-bottom: 8px; }
+        .close-btn { cursor: pointer; font-weight: bold; font-size: 16px; color: #868e96; }
+        .ledger-item { padding: 5px 0; border-bottom: 1px dashed #e9ecef; font-size: 11px; display: flex; justify-content: space-between; }
+        .book-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+        .book-card { border: 1px solid #dee2e6; border-radius: 6px; padding: 6px; text-align: center; font-size: 10px; background: #f8f9fa; }
         .book-card.locked { opacity: 0.4; filter: grayscale(100%); }
 
-        .flyer-target { position: absolute; width: 34px; height: 34px; background: #ff922b; color: white; font-weight: bold; font-size: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.2); z-index: 60; }
+        .flyer-target { position: absolute; width: 38px; height: 38px; background: #ff922b; color: white; font-weight: bold; font-size: 9px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.2); z-index: 60; }
     </style>
 </head>
 <body>
@@ -130,7 +149,7 @@
         <div id="menu-title-overlay" class="menu-title-overlay">후라이드치킨</div>
     </div>
 
-    <!-- 버튼 조작 영역 -->
+    <!-- 버튼 영역 -->
     <button id="click-btn" class="btn btn-click" onclick="makeChicken(event)">🍗 치킨 조리 (+100원)</button>
     
     <div class="section-title">신메뉴 개발</div>
@@ -155,7 +174,7 @@
 <div id="ledger-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 style="margin:0; font-size: 11px;">📊 매출 장부 기록</h4>
+            <h4 style="margin:0; font-size: 12px;">📊 매출 장부 기록</h4>
             <span class="close-btn" onclick="closeModal('ledger-modal')">&times;</span>
         </div>
         <div id="ledger-list"></div>
@@ -166,7 +185,7 @@
 <div id="book-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 style="margin:0; font-size: 11px;">📖 메뉴 컬렉션 도감</h4>
+            <h4 style="margin:0; font-size: 12px;">📖 메뉴 컬렉션 도감</h4>
             <span class="close-btn" onclick="closeModal('book-modal')">&times;</span>
         </div>
         <div class="book-grid" id="book-grid"></div>
@@ -316,8 +335,8 @@
         floatEl.innerText = text;
 
         const rect = card.getBoundingClientRect();
-        const x = e.clientX ? (e.clientX - rect.left - 20) : 180;
-        const y = e.clientY ? (e.clientY - rect.top - 20) : 180;
+        const x = e.clientX ? (e.clientX - rect.left - 20) : (rect.width / 2);
+        const y = e.clientY ? (e.clientY - rect.top - 20) : (rect.height / 2);
 
         floatEl.style.left = `${x}px`;
         floatEl.style.top = `${y}px`;
@@ -409,8 +428,8 @@
             const target = document.createElement("div");
             target.className = "flyer-target";
             target.innerText = "전단지";
-            target.style.left = `${Math.random() * 220 + 20}px`;
-            target.style.top = `${Math.random() * 160 + 100}px`;
+            target.style.left = `${Math.random() * (card.clientWidth - 50) + 10}px`;
+            target.style.top = `${Math.random() * (card.clientHeight - 200) + 100}px`;
 
             target.onclick = (e) => {
                 const bonus = Math.floor(chickenMenuData[menuLevel].power * 5);
@@ -601,9 +620,9 @@
         const bookGrid = document.getElementById("book-grid");
         bookGrid.innerHTML = chickenMenuData.map((menu, idx) => `
             <div class="book-card ${idx > menuLevel ? 'locked' : ''}">
-                <div style="font-size: 10px;">🍗</div>
+                <div style="font-size: 11px;">🍗</div>
                 <strong>${idx <= menuLevel ? menu.name : '????'}</strong>
-                <div style="color: #868e96; margin-top: 1px;">
+                <div style="color: #868e96; margin-top: 2px;">
                     ${idx <= menuLevel ? '+' + menu.power.toLocaleString() + '원' : '미해금'}
                 </div>
             </div>
